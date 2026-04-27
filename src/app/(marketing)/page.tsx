@@ -1,8 +1,8 @@
-import Hero from "@/components/Hero";
-import BookingForm from "@/components/BookingForm";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import ServiceAreas from "@/components/ServiceAreas";
-import Testimonials from "@/components/Testimonials";
+import Hero from "@/components/marketing/Hero";
+import BookingForm from "@/components/marketing/BookingForm";
+import WhyChooseUs from "@/components/marketing/WhyChooseUs";
+import ServiceAreas from "@/components/marketing/ServiceAreas";
+import Testimonials from "@/components/marketing/Testimonials";
 
 export default function Home() {
   return (

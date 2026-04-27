@@ -2,6 +2,13 @@
 
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
+import {
+  BRAND_NAME,
+  CONTACT_ADDRESS,
+  CONTACT_EMAIL,
+  CONTACT_PHONE_DISPLAY,
+  buildWhatsAppLink,
+} from "@/lib/config";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -20,8 +27,7 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const message = `Contact from ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nMessage: ${formData.message}`;
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    window.open(buildWhatsAppLink(message), "_blank");
   };
 
   return (
@@ -43,30 +49,28 @@ export default function ContactPage() {
                   <FaMapMarkerAlt className="text-primary-orange text-xl mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-gray-800">Address</p>
-                    <p className="text-gray-600">
-                      Amorapolis, Bharat Mata Road, Dhanori, Pune MH 411015
-                    </p>
+                    <p className="text-gray-600">{CONTACT_ADDRESS}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <FaPhone className="text-primary-orange text-xl mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-gray-800">Phone</p>
-                    <p className="text-gray-600">+91 98765 43210</p>
+                    <p className="text-gray-600">{CONTACT_PHONE_DISPLAY}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <FaEnvelope className="text-primary-orange text-xl mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-gray-800">Email</p>
-                    <p className="text-gray-600">info@skgrideservices.com</p>
+                    <p className="text-gray-600">{CONTACT_EMAIL}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <FaWhatsapp className="text-primary-orange text-xl mt-1 shrink-0" />
                   <div>
                     <p className="font-semibold text-gray-800">WhatsApp</p>
-                    <p className="text-gray-600">+91 98765 43210</p>
+                    <p className="text-gray-600">{CONTACT_PHONE_DISPLAY}</p>
                   </div>
                 </li>
               </ul>
@@ -82,7 +86,7 @@ export default function ContactPage() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="SKG Ride Services Location"
+                title={`${BRAND_NAME} location`}
               />
             </div>
           </div>

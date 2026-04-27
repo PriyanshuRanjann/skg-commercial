@@ -1,29 +1,19 @@
 import { FaStar } from "react-icons/fa";
 
-const testimonials = [
-  {
-    name: "Rahul Sharma",
-    text: "Excellent service! The driver was on time and the car was clean and comfortable. Will definitely use SKG again.",
-    rating: 5,
-  },
-  {
-    name: "Priya Deshmukh",
-    text: "Best cab service in Pune. Very affordable rates and professional drivers. Highly recommended!",
-    rating: 5,
-  },
-  {
-    name: "Amit Patil",
-    text: "Used SKG for airport pickup. Smooth experience, fair pricing, and friendly driver. Great service!",
-    rating: 4,
-  },
-];
+type Testimonial = { name: string; text: string; rating: number };
+
+// Real testimonials go here once available from the owner.
+// Until then this section is hidden so the page doesn't show fake reviews.
+const testimonials: Testimonial[] = [];
 
 export default function Testimonials() {
+  if (testimonials.length === 0) return null;
+
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center text-primary-blue mb-12">
-          Customer Testimonials
+          What Our Customers Say
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((t) => (

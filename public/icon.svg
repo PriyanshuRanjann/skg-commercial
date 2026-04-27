@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1a3a5c"/>
+  <g fill="#e8880a">
+    <path d="M128 304 l40 -88 q8 -16 28 -16 h120 q20 0 28 16 l40 88 v72 q0 8 -8 8 h-32 q-8 0 -8 -8 v-16 h-160 v16 q0 8 -8 8 h-32 q-8 0 -8 -8 z m48 -8 q12 0 20 -8 q8 -8 8 -20 q0 -12 -8 -20 q-8 -8 -20 -8 q-12 0 -20 8 q-8 8 -8 20 q0 12 8 20 q8 8 20 8 z m160 0 q12 0 20 -8 q8 -8 8 -20 q0 -12 -8 -20 q-8 -8 -20 -8 q-12 0 -20 8 q-8 8 -8 20 q0 12 8 20 q8 8 20 8 z"/>
+  </g>
+  <text x="256" y="172" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="92" fill="#ffffff" text-anchor="middle">MM</text>
+</svg>

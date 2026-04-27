@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,9 +9,24 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "SKG Ride Services - Reliable Commercial Cab Services Across Pune",
-  description:
-    "SKG Ride Services is a trusted cab service provider in Pune offering reliable and affordable transportation. Book your ride today!",
+  title: {
+    default: `${BRAND_NAME} — ${BRAND_TAGLINE}`,
+    template: `%s · ${BRAND_NAME}`,
+  },
+  description: `${BRAND_NAME} — reliable commercial cab service in Pune. ${BRAND_TAGLINE}.`,
+  manifest: "/manifest.webmanifest",
+  applicationName: BRAND_NAME,
+  appleWebApp: {
+    capable: true,
+    title: BRAND_NAME,
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1a3a5c",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -22,10 +36,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body
+        className="min-h-full font-sans bg-background text-foreground"
+        suppressHydrationWarning
+      >
+        {children}
       </body>
     </html>
   );

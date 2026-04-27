@@ -1,24 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const locations = [
-  "Dhanori",
-  "Viman Nagar",
-  "Kharadi",
-  "Hinjewadi",
-  "Pune Station",
-  "Pune Airport",
-  "Shivajinagar",
-  "Koregaon Park",
-  "Hadapsar",
-  "Wakad",
-  "Baner",
-  "Aundh",
-  "Pimpri-Chinchwad",
-  "Magarpatta",
-  "Kalyani Nagar",
-];
+import { SERVICE_LOCATIONS, buildWhatsAppLink } from "@/lib/config";
 
 export default function BookRidePage() {
   const [formData, setFormData] = useState({
@@ -53,8 +36,7 @@ Date: ${formData.date}
 Time: ${formData.time}
 Vehicle: ${formData.vehicleType}
 Instructions: ${formData.instructions}`;
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    window.open(buildWhatsAppLink(message), "_blank");
   };
 
   return (
@@ -129,7 +111,7 @@ Instructions: ${formData.instructions}`;
                 className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
               >
                 <option value="">Pickup Location</option>
-                {locations.map((loc) => (
+                {SERVICE_LOCATIONS.map((loc) => (
                   <option key={loc} value={loc}>
                     {loc}
                   </option>
@@ -148,7 +130,7 @@ Instructions: ${formData.instructions}`;
                 className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
               >
                 <option value="">Drop Location</option>
-                {locations.map((loc) => (
+                {SERVICE_LOCATIONS.map((loc) => (
                   <option key={loc} value={loc}>
                     {loc}
                   </option>
@@ -186,7 +168,7 @@ Instructions: ${formData.instructions}`;
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Vehicle Type
+                Vehicle
               </label>
               <select
                 name="vehicleType"
@@ -195,9 +177,7 @@ Instructions: ${formData.instructions}`;
                 className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
               >
                 <option value="">Select Vehicle</option>
-                <option value="Sedan">Sedan</option>
-                <option value="SUV">SUV (Ertiga)</option>
-                <option value="Luxury">Luxury Car</option>
+                <option value="Ertiga">Ertiga (6+1)</option>
               </select>
             </div>
           </div>
