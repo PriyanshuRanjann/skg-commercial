@@ -11,12 +11,12 @@ export default async function DriverLayout({
   const showHeader = session?.role === "driver";
 
   return (
-    <div className="min-h-screen flex flex-col bg-light-gray">
+    <div className="min-h-screen flex flex-col bg-[var(--bg-elevated)]">
       {showHeader && (
-        <header className="bg-primary-blue text-white sticky top-0 z-40 shadow-md">
+        <header className="bg-[var(--bg-deep)] text-foreground sticky top-0 z-40 shadow-md">
           <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
             <Link href="/driver" className="flex items-center gap-2 font-bold">
-              <FaCar className="text-primary-orange text-xl" />
+              <FaCar className="text-accent text-xl" />
               <span>{BRAND_NAME} Driver</span>
             </Link>
             <div className="flex items-center gap-3 text-sm">

@@ -19,7 +19,7 @@ export function OwnerLogoutButton() {
         }
       }}
       disabled={busy}
-      className="text-white/80 hover:text-white underline-offset-2 hover:underline text-sm disabled:opacity-50"
+      className="text-foreground/80 hover:text-foreground underline-offset-2 hover:underline text-sm disabled:opacity-50"
     >
       {busy ? "..." : "Sign out"}
     </button>

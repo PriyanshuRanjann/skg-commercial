@@ -76,18 +76,18 @@ export default function ShiftStartPage() {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-primary-blue">Start Shift</h1>
-        <p className="text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Start Shift</h1>
+        <p className="text-sm text-muted">
           Take two photos of the car (front + side). Your location and timestamp are recorded.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-5 space-y-5">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-5">
         <PhotoCapture label="Front photo" required onChange={setPhoto1} />
         <PhotoCapture label="Side photo" required onChange={setPhoto2} />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4">
         <Input
           label="Start km (odometer)"
           name="km"
@@ -100,25 +100,25 @@ export default function ShiftStartPage() {
         />
 
         <div>
-          <p className="text-sm font-semibold text-gray-700 mb-1">Location</p>
+          <p className="text-sm font-semibold text-foreground/85 mb-1">Location</p>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={captureLocation}
-              className="text-sm font-semibold text-primary-orange underline"
+              className="text-sm font-semibold text-accent underline"
             >
               {coordsState === "fetching" ? "Locating..." : "Capture GPS"}
             </button>
-            <span className="text-sm text-gray-600">{formatLatLng(coords)}</span>
+            <span className="text-sm text-muted">{formatLatLng(coords)}</span>
           </div>
           {coordsState === "fail" && (
-            <p className="text-xs text-red-600 mt-1">Could not get location. Submit will retry.</p>
+            <p className="text-xs text-[var(--danger)] mt-1">Could not get location. Submit will retry.</p>
           )}
         </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+        <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
           {error}
         </p>
       )}

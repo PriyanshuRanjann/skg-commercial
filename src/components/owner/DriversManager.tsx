@@ -109,11 +109,71 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
     }
   };
 
+  const onApprove = async (d: Driver) => {
+    setBusy(true);
+    try {
+      await fetch("/api/drivers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: d.id,
+          name: d.name,
+          phone: d.phone,
+          username: d.username,
+          commission_pct: Number(d.commission_pct) || 20,
+          active: true,
+        }),
+      });
+      const list = await fetch("/api/drivers").then((r) => r.json());
+      if (list.ok) setDrivers(list.drivers);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const pending = drivers.filter((d) => String(d.active).toLowerCase() === "false");
+
   return (
+    <div className="space-y-6">
+      {pending.length > 0 && (
+        <div className="card-luxe p-5 border-accent/30 bg-accent/[0.04]">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-bold text-accent tracking-[0.15em] uppercase">
+              {pending.length} pending {pending.length === 1 ? "application" : "applications"}
+            </h2>
+          </div>
+          <p className="text-xs text-muted mb-4">
+            New drivers signed up via /driver/signup. Approve them to enable login.
+          </p>
+          <ul className="space-y-2">
+            {pending.map((d) => (
+              <li
+                key={d.id}
+                className="flex items-center justify-between bg-[var(--bg-elevated)] rounded-lg px-4 py-3"
+              >
+                <div>
+                  <p className="font-semibold text-foreground">{d.name}</p>
+                  <p className="text-xs text-muted">
+                    {d.phone || "—"} · @{d.username}
+                  </p>
+                </div>
+                <button
+                  onClick={() => onApprove(d)}
+                  disabled={busy}
+                  className="btn-gold px-4 py-2 rounded-full text-xs font-bold disabled:opacity-60"
+                >
+                  Approve
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
     <div className="grid lg:grid-cols-[1fr_360px] gap-6">
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-light-gray text-gray-600">
+          <thead className="bg-[var(--bg-elevated)] text-muted">
             <tr>
               <th className="text-left px-4 py-2">Name</th>
               <th className="text-left px-4 py-2">Username</th>
@@ -125,37 +185,52 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
           <tbody>
             {drivers.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center px-4 py-6 text-gray-500">
+                <td colSpan={5} className="text-center px-4 py-6 text-muted">
                   No drivers yet. Add one with the form on the right.
                 </td>
               </tr>
             )}
             {drivers.map((d) => (
-              <tr key={d.id} className="border-t border-gray-100">
+              <tr key={d.id} className="border-t border-[var(--hairline)]">
                 <td className="px-4 py-2">
-                  <div className="font-semibold text-primary-blue">{d.name}</div>
-                  <div className="text-xs text-gray-500">{d.phone || "—"}</div>
+                  <div className="font-semibold text-foreground">{d.name}</div>
+                  <div className="text-xs text-muted">{d.phone || "—"}</div>
                 </td>
                 <td className="px-4 py-2">{d.username}</td>
                 <td className="px-4 py-2 text-right">{d.commission_pct}%</td>
                 <td className="px-4 py-2">
                   {String(d.active).toLowerCase() === "false" ? (
-                    <span className="text-gray-400">Inactive</span>
+                    <span className="inline-flex items-center gap-1.5 text-amber-300 text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      Pending
+                    </span>
                   ) : (
-                    <span className="text-green-600 font-semibold">Active</span>
+                    <span className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Active
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-2 text-right space-x-2">
+                  {String(d.active).toLowerCase() === "false" && (
+                    <button
+                      onClick={() => onApprove(d)}
+                      disabled={busy}
+                      className="text-sm text-accent-light hover:text-accent font-semibold disabled:opacity-60"
+                    >
+                      Approve
+                    </button>
+                  )}
                   <button
                     onClick={() => onSelect(d)}
-                    className="text-sm text-primary-orange hover:underline"
+                    className="text-sm text-accent hover:underline"
                   >
                     Edit
                   </button>
                   {String(d.active).toLowerCase() !== "false" && (
                     <button
                       onClick={() => onDelete(d.id)}
-                      className="text-sm text-red-600 hover:underline"
+                      className="text-sm text-[var(--danger)] hover:underline"
                     >
                       Disable
                     </button>
@@ -167,8 +242,8 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
         </table>
       </div>
 
-      <form onSubmit={onSubmit} className="bg-white rounded-xl shadow-md p-5 space-y-4 h-fit">
-        <h2 className="text-lg font-semibold text-primary-blue">
+      <form onSubmit={onSubmit} className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4 h-fit">
+        <h2 className="text-lg font-semibold text-foreground">
           {editing ? "Edit driver" : "Add driver"}
         </h2>
 
@@ -212,7 +287,7 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
           value={form.commission_pct}
           onChange={(e) => setForm({ ...form, commission_pct: e.target.value })}
         />
-        <label className="flex items-center gap-2 text-sm text-gray-700">
+        <label className="flex items-center gap-2 text-sm text-foreground/85">
           <input
             type="checkbox"
             checked={form.active}
@@ -222,7 +297,7 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
         </label>
 
         {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+          <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
             {error}
           </p>
         )}
@@ -239,6 +314,7 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
           )}
         </div>
       </form>
+    </div>
     </div>
   );
 }

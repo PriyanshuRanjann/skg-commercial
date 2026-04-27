@@ -42,6 +42,18 @@ export const feedbackSchema = z.object({
   comment: z.string().max(1000).optional(),
 });
 
+export const driverSignupSchema = z.object({
+  name: z.string().min(1).max(120).trim(),
+  phone: z.string().max(40).optional().default(""),
+  username: z.string().min(3).max(64).trim(),
+  password: z.string().min(6).max(256),
+});
+
+export const ownerSignupSchema = z.object({
+  username: z.string().min(3).max(64).trim(),
+  password: z.string().min(8).max(256),
+});
+
 export const driverUpsertSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1).max(120),

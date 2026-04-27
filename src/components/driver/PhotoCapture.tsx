@@ -27,10 +27,10 @@ export function PhotoCapture({ label, hint, required, onChange }: Props) {
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700">
+      <label className="block text-sm font-semibold text-foreground/85">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      {hint && <p className="text-xs text-gray-500">{hint}</p>}
+      {hint && <p className="text-xs text-muted">{hint}</p>}
 
       <input
         ref={inputRef}
@@ -47,7 +47,7 @@ export function PhotoCapture({ label, hint, required, onChange }: Props) {
           <img
             src={preview}
             alt={label}
-            className="w-full rounded-lg border border-gray-200 max-h-64 object-cover"
+            className="w-full rounded-lg border border-[var(--hairline)] max-h-64 object-cover"
           />
           <button
             type="button"
@@ -55,7 +55,7 @@ export function PhotoCapture({ label, hint, required, onChange }: Props) {
               handleFile(null);
               if (inputRef.current) inputRef.current.value = "";
             }}
-            className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-2 shadow-md hover:bg-red-700"
+            className="absolute top-2 right-2 bg-red-600 text-foreground rounded-full p-2 shadow-md hover:bg-red-700"
             aria-label="Remove photo"
           >
             <FaTimes />
@@ -65,7 +65,7 @@ export function PhotoCapture({ label, hint, required, onChange }: Props) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="w-full border-2 border-dashed border-gray-300 rounded-lg py-10 flex flex-col items-center justify-center gap-2 text-gray-500 hover:border-primary-orange hover:text-primary-orange transition-colors"
+          className="w-full border-2 border-dashed border-[var(--hairline-strong)] rounded-lg py-10 flex flex-col items-center justify-center gap-2 text-muted hover:border-primary-orange hover:text-accent transition-colors"
         >
           <FaCamera className="text-3xl" />
           <span className="font-semibold">Take photo</span>

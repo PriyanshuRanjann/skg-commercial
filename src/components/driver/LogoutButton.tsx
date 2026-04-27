@@ -22,7 +22,7 @@ export function LogoutButton() {
     <button
       onClick={onClick}
       disabled={busy}
-      className="text-sm text-white/90 hover:text-white underline-offset-2 hover:underline disabled:opacity-50"
+      className="text-sm text-foreground/90 hover:text-foreground underline-offset-2 hover:underline disabled:opacity-50"
     >
       {busy ? "..." : "Sign out"}
     </button>

@@ -37,9 +37,9 @@ export default async function ShiftsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-primary-blue">Shifts</h1>
+      <h1 className="text-2xl font-bold text-foreground">Shifts</h1>
       {backendDown ? (
-        <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm rounded-lg px-4 py-3">
+        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm rounded-lg px-4 py-3">
           Backend not reachable.
         </div>
       ) : (

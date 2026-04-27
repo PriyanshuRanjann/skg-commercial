@@ -46,8 +46,8 @@ export default async function OwnerOverview() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-primary-blue">Today</h1>
-        <p className="text-sm text-gray-500">All numbers reset at midnight, IST.</p>
+        <h1 className="text-2xl font-bold text-foreground">Today</h1>
+        <p className="text-sm text-muted">All numbers reset at midnight, IST.</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -64,13 +64,13 @@ export default async function OwnerOverview() {
         <StatCard label="Avg rating today" value={avgRating} icon={<FaCommentDots />} />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-lg font-semibold text-primary-blue mb-2">Today&apos;s rides</h2>
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-6">
+        <h2 className="text-lg font-semibold text-foreground mb-2">Today&apos;s rides</h2>
         {rides.length === 0 ? (
-          <p className="text-sm text-gray-500">No rides logged yet today.</p>
+          <p className="text-sm text-muted">No rides logged yet today.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-gray-500">
+            <thead className="text-muted">
               <tr>
                 <th className="text-left py-1">Time</th>
                 <th className="text-right py-1">Fare</th>
@@ -80,7 +80,7 @@ export default async function OwnerOverview() {
             </thead>
             <tbody>
               {rides.map((r, i) => (
-                <tr key={i} className="border-t border-gray-100">
+                <tr key={i} className="border-t border-[var(--hairline)]">
                   <td className="py-1">{r.ts ? new Date(r.ts).toLocaleTimeString() : "—"}</td>
                   <td className="py-1 text-right">₹{num(r.fare).toFixed(2)}</td>
                   <td className="py-1 text-right">₹{num(r.commission_amt).toFixed(2)}</td>

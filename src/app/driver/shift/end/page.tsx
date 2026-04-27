@@ -53,8 +53,8 @@ function EndShiftForm() {
 
   if (!shiftId) {
     return (
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <p className="text-red-600">No shift selected. Go back to your driver home.</p>
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-6">
+        <p className="text-[var(--danger)]">No shift selected. Go back to your driver home.</p>
       </div>
     );
   }
@@ -62,15 +62,15 @@ function EndShiftForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-primary-blue">End Shift</h1>
-        <p className="text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">End Shift</h1>
+        <p className="text-sm text-muted">
           Enter the closing odometer reading. Your location is captured automatically.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
-        <p className="text-sm text-gray-500">
-          Start km was <span className="font-semibold text-primary-blue">{startKm}</span>.
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4">
+        <p className="text-sm text-muted">
+          Start km was <span className="font-semibold text-foreground">{startKm}</span>.
         </p>
         <Input
           label="End km (odometer)"
@@ -83,14 +83,14 @@ function EndShiftForm() {
           onChange={(e) => setKm(e.target.value)}
         />
         {km && Number(km) >= startKm && (
-          <p className="text-sm text-gray-600">
-            Distance this shift: <span className="font-bold text-primary-orange">{Number(km) - startKm} km</span>
+          <p className="text-sm text-muted">
+            Distance this shift: <span className="font-bold text-accent">{Number(km) - startKm} km</span>
           </p>
         )}
       </div>
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+        <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
           {error}
         </p>
       )}
@@ -105,7 +105,7 @@ function EndShiftForm() {
 
 export default function ShiftEndPage() {
   return (
-    <Suspense fallback={<div className="text-gray-500">Loading…</div>}>
+    <Suspense fallback={<div className="text-muted">Loading…</div>}>
       <EndShiftForm />
     </Suspense>
   );

@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { FaBolt, FaRoute, FaArrowRight } from "react-icons/fa";
-import { SERVICE_LOCATIONS, SERVICE_TYPES, buildWhatsAppLink, type ServiceType } from "@/lib/config";
+import { FaBolt, FaRoute, FaArrowRight, FaWhatsapp } from "react-icons/fa";
+import {
+  SERVICE_LOCATIONS,
+  SERVICE_TYPES,
+  buildWhatsAppLink,
+  type ServiceType,
+} from "@/lib/config";
 
 export default function BookingForm() {
   const [tripType, setTripType] = useState<ServiceType>("intra-city");
@@ -31,26 +36,29 @@ export default function BookingForm() {
   };
 
   return (
-    <section className="py-20 md:py-24 relative">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="text-center mb-10 animate-fade-up">
-          <span className="inline-block px-3 py-1 rounded-full bg-primary-orange/10 text-primary-orange text-xs font-bold tracking-wide uppercase">
-            Book in 30 seconds
+    <section className="relative py-24 md:py-32">
+      {/* subtle gold edge */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12 reveal in">
+          <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold tracking-[0.3em] uppercase">
+            Reserve in 30 seconds
           </span>
-          <h2 className="mt-4 text-3xl md:text-5xl font-black text-primary-blue tracking-tight">
-            Where to today?
+          <h2 className="mt-5 heading-display text-4xl md:text-6xl text-foreground">
+            Where to <span className="gold-text">today</span>?
           </h2>
-          <p className="mt-3 text-muted">
-            Pick your trip type — we&apos;ll WhatsApp you a confirmation.
+          <p className="mt-4 text-muted">
+            Pick your trip type — we&apos;ll WhatsApp you to confirm.
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="card-soft p-6 md:p-8 animate-fade-up delay-100"
+          className="card-luxe p-6 md:p-10 animate-fade-up delay-100"
         >
           {/* Trip type toggle */}
-          <div className="grid grid-cols-2 gap-2 p-1 bg-light-gray rounded-full mb-6">
+          <div className="grid grid-cols-2 gap-2 p-1.5 bg-[var(--bg-deep)] border border-[var(--hairline)] rounded-full mb-8">
             {SERVICE_TYPES.map((t) => {
               const active = tripType === t.id;
               const Icon = t.id === "intra-city" ? FaBolt : FaRoute;
@@ -59,10 +67,10 @@ export default function BookingForm() {
                   type="button"
                   key={t.id}
                   onClick={() => setTripType(t.id)}
-                  className={`flex items-center justify-center gap-2 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                  className={`flex items-center justify-center gap-2 py-3 rounded-full font-semibold text-sm transition-all ${
                     active
-                      ? "bg-primary-blue text-white shadow-md"
-                      : "text-primary-blue hover:text-primary-orange"
+                      ? "btn-gold"
+                      : "text-foreground/60 hover:text-accent-light"
                   }`}
                 >
                   <Icon /> {t.short}
@@ -71,7 +79,7 @@ export default function BookingForm() {
             })}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Field label="Your name">
               <input
                 type="text"
@@ -106,7 +114,9 @@ export default function BookingForm() {
               >
                 <option value="">Select pickup area</option>
                 {SERVICE_LOCATIONS.map((loc) => (
-                  <option key={loc} value={loc}>{loc}</option>
+                  <option key={loc} value={loc}>
+                    {loc}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -132,7 +142,9 @@ export default function BookingForm() {
                 >
                   <option value="">Select drop area</option>
                   {SERVICE_LOCATIONS.map((loc) => (
-                    <option key={loc} value={loc}>{loc}</option>
+                    <option key={loc} value={loc}>
+                      {loc}
+                    </option>
                   ))}
                 </select>
               )}
@@ -163,43 +175,31 @@ export default function BookingForm() {
 
           <button
             type="submit"
-            className="mt-6 w-full inline-flex items-center justify-center gap-2 bg-primary-orange text-white py-4 rounded-full font-bold text-base hover:bg-primary-orange-light btn-glow transition-all group"
+            className="mt-8 w-full inline-flex items-center justify-center gap-2 btn-gold py-5 rounded-full font-bold text-base group"
           >
+            <FaWhatsapp className="text-lg" />
             Check availability
             <FaArrowRight className="transition-transform group-hover:translate-x-1" />
           </button>
-          <p className="text-xs text-center text-muted mt-3">
+          <p className="text-xs text-center text-muted mt-4">
             We&apos;ll reach out on WhatsApp to confirm — no payment yet.
           </p>
         </form>
       </div>
-
-      {/* Inline modern input style — kept here so other pages can opt in if needed */}
-      <style>{`
-        .input-modern {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border-radius: 0.75rem;
-          border: 1px solid var(--hairline);
-          background: #fff;
-          color: var(--foreground);
-          font-size: 0.95rem;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .input-modern:focus {
-          outline: none;
-          border-color: var(--primary-orange);
-          box-shadow: 0 0 0 4px rgba(232, 136, 10, 0.12);
-        }
-      `}</style>
     </section>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
-      <span className="block text-xs font-bold tracking-wide uppercase text-muted mb-1.5">
+      <span className="block text-[10px] font-semibold tracking-[0.25em] uppercase text-muted mb-2">
         {label}
       </span>
       {children}

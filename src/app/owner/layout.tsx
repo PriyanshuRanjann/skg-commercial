@@ -23,10 +23,10 @@ export default async function OwnerLayout({
   if (!showShell) return <>{children}</>;
 
   return (
-    <div className="min-h-screen flex bg-light-gray">
-      <aside className="hidden md:flex md:flex-col w-60 bg-primary-blue text-white shrink-0">
-        <Link href="/owner" className="px-6 h-16 flex items-center gap-2 font-bold text-lg border-b border-white/10">
-          <FaCar className="text-primary-orange text-xl" />
+    <div className="min-h-screen flex bg-[var(--bg-elevated)]">
+      <aside className="hidden md:flex md:flex-col w-60 bg-[var(--bg-deep)] text-foreground shrink-0">
+        <Link href="/owner" className="px-6 h-16 flex items-center gap-2 font-bold text-lg border-b border-[var(--hairline)]">
+          <FaCar className="text-accent text-xl" />
           {BRAND_NAME}
         </Link>
         <nav className="flex-1 py-4">
@@ -34,33 +34,33 @@ export default async function OwnerLayout({
             <Link
               key={n.href}
               href={n.href}
-              className="flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/10"
+              className="flex items-center gap-3 px-6 py-3 text-sm hover:bg-[var(--bg-card)]/10"
             >
-              <span className="text-primary-orange">{n.icon}</span>
+              <span className="text-accent">{n.icon}</span>
               {n.label}
             </Link>
           ))}
         </nav>
-        <div className="p-6 border-t border-white/10 text-sm">
-          <p className="text-white/70">{session?.username}</p>
+        <div className="p-6 border-t border-[var(--hairline)] text-sm">
+          <p className="text-foreground/70">{session?.username}</p>
           <OwnerLogoutButton />
         </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden bg-primary-blue text-white px-4 h-14 flex items-center justify-between">
+        <header className="md:hidden bg-[var(--bg-deep)] text-foreground px-4 h-14 flex items-center justify-between">
           <Link href="/owner" className="flex items-center gap-2 font-bold">
-            <FaCar className="text-primary-orange text-xl" /> {BRAND_NAME}
+            <FaCar className="text-accent text-xl" /> {BRAND_NAME}
           </Link>
           <OwnerLogoutButton />
         </header>
 
-        <nav className="md:hidden bg-white border-b border-gray-200 overflow-x-auto whitespace-nowrap px-2 py-2 flex gap-1">
+        <nav className="md:hidden bg-[var(--bg-card)] border-b border-[var(--hairline)] overflow-x-auto whitespace-nowrap px-2 py-2 flex gap-1">
           {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="text-xs text-primary-blue px-3 py-1.5 rounded-md hover:bg-light-gray"
+              className="text-xs text-foreground px-3 py-1.5 rounded-md hover:bg-[var(--bg-elevated)]"
             >
               {n.label}
             </Link>

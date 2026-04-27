@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { FaBolt, FaRoute, FaPlaneDeparture, FaArrowRight } from "react-icons/fa";
 
 const services = [
@@ -10,7 +11,6 @@ const services = [
     bullets: ["Pune-wide pickup", "Hourly packages", "Verified driver"],
     cta: "Book on-demand",
     href: "/book-ride",
-    accent: "from-primary-orange to-primary-orange-light",
   },
   {
     icon: <FaRoute />,
@@ -24,7 +24,6 @@ const services = [
     ],
     cta: "Plan an outstation",
     href: "/book-ride",
-    accent: "from-primary-blue to-light-blue",
   },
   {
     icon: <FaPlaneDeparture />,
@@ -34,49 +33,58 @@ const services = [
     bullets: ["Flight tracking", "Meet & greet", "Fixed transparent fare"],
     cta: "Book airport ride",
     href: "/book-ride",
-    accent: "from-primary-blue-dark to-primary-blue",
   },
 ];
 
 export default function ServiceAreas() {
   return (
-    <section className="py-20 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="max-w-2xl mx-auto text-center mb-14">
-          <span className="inline-block px-3 py-1 rounded-full bg-primary-blue/10 text-primary-blue text-xs font-bold tracking-wide uppercase">
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Faint Ertiga photo as bg */}
+      <div className="absolute inset-0 -z-10 opacity-[0.06]">
+        <Image
+          src="/images/hero/ertiga.jpg"
+          alt=""
+          fill
+          aria-hidden
+          className="object-cover"
+        />
+      </div>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--bg)] via-transparent to-[var(--bg)]" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-2xl mx-auto text-center mb-16">
+          <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold tracking-[0.3em] uppercase">
             What we do
           </span>
-          <h2 className="mt-4 text-3xl md:text-5xl font-black text-primary-blue tracking-tight">
-            Two ways to ride
+          <h2 className="mt-5 heading-display text-4xl md:text-6xl text-foreground">
+            Three ways to <span className="gold-text">ride</span>.
           </h2>
-          <p className="mt-3 text-muted">
-            Quick local rides on demand, or full-day outstation trips — we run both.
+          <p className="mt-4 text-muted">
+            Quick local trips, full-day outstation runs, or airport transfers — we run all three.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {services.map((s) => (
-            <div key={s.title} className="card-soft p-7 group flex flex-col">
-              <div
-                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.accent} flex items-center justify-center text-white text-xl mb-5`}
-              >
+            <div key={s.title} className="card-luxe p-8 group flex flex-col">
+              <div className="w-14 h-14 rounded-2xl bg-accent/15 border border-accent/20 flex items-center justify-center text-accent-light text-2xl mb-6 group-hover:bg-accent/20 group-hover:border-accent/40 transition-all">
                 {s.icon}
               </div>
-              <h3 className="text-xl font-bold text-primary-blue mb-2">
+              <h3 className="text-xl font-semibold text-foreground mb-3 tracking-wide">
                 {s.title}
               </h3>
-              <p className="text-muted text-sm leading-relaxed mb-4">{s.blurb}</p>
-              <ul className="space-y-1.5 mb-6 text-sm text-foreground/80">
+              <p className="text-muted text-sm leading-relaxed mb-5">{s.blurb}</p>
+              <ul className="space-y-2 mb-7 text-sm text-foreground/85">
                 {s.bullets.map((b) => (
-                  <li key={b} className="flex items-start gap-2">
-                    <span className="text-primary-orange mt-1">•</span>
+                  <li key={b} className="flex items-start gap-2.5">
+                    <span className="text-accent mt-1 text-xs">◆</span>
                     <span>{b}</span>
                   </li>
                 ))}
               </ul>
               <Link
                 href={s.href}
-                className="mt-auto inline-flex items-center gap-2 text-primary-orange font-semibold text-sm group-hover:gap-3 transition-all"
+                className="mt-auto inline-flex items-center gap-2 text-accent-light hover:text-accent font-semibold text-sm group-hover:gap-3 transition-all"
               >
                 {s.cta}
                 <FaArrowRight className="transition-transform group-hover:translate-x-1" />

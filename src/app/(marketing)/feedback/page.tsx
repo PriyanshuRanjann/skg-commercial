@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
-import { Button } from "@/components/ui/Button";
-import { Input, Textarea } from "@/components/ui/Input";
 import { Spinner } from "@/components/ui/Spinner";
 import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/config";
 
@@ -51,14 +49,18 @@ export default function FeedbackPage() {
 
   if (done) {
     return (
-      <section className="py-20 bg-light-gray min-h-screen">
+      <section className="py-32 min-h-screen flex items-center">
         <div className="max-w-md mx-auto px-4 text-center">
-          <FaCheckCircle className="text-primary-orange text-6xl mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-primary-blue mb-2">Thank you!</h1>
-          <p className="text-gray-600">
-            We appreciate your feedback. Have a great day!
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-accent/15 border border-accent/30 flex items-center justify-center">
+            <FaCheckCircle className="text-accent-light text-4xl" />
+          </div>
+          <h1 className="heading-display text-4xl text-foreground mb-3">
+            Thank <span className="gold-text">you</span>.
+          </h1>
+          <p className="text-muted">
+            We appreciate your feedback. Safe travels.
           </p>
-          <p className="mt-8 text-xs text-gray-400">
+          <p className="mt-12 text-[10px] tracking-[0.3em] uppercase text-accent">
             {BRAND_NAME} — {BRAND_TAGLINE}
           </p>
         </div>
@@ -67,21 +69,26 @@ export default function FeedbackPage() {
   }
 
   return (
-    <section className="py-12 md:py-16 bg-light-gray min-h-screen">
-      <div className="max-w-xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-primary-blue mb-2 text-center">
-          How was your ride?
-        </h1>
-        <p className="text-gray-600 text-center mb-8">
-          Your feedback helps us serve you better.
-        </p>
+    <section className="py-24 md:py-32 min-h-screen">
+      <div className="max-w-xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-10">
+          <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold tracking-[0.3em] uppercase">
+            Passenger feedback
+          </span>
+          <h1 className="mt-5 heading-display text-4xl md:text-5xl text-foreground">
+            How was your <span className="gold-text">ride</span>?
+          </h1>
+          <p className="mt-3 text-muted">
+            30-second feedback. Helps us serve you better.
+          </p>
+        </div>
 
-        <form onSubmit={onSubmit} className="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-5">
+        <form onSubmit={onSubmit} className="card-luxe p-6 md:p-8 space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">
+            <label className="block text-[10px] font-semibold tracking-[0.25em] uppercase text-muted mb-3 text-center">
               Rate your ride
             </label>
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-3">
               {[1, 2, 3, 4, 5].map((n) => (
                 <button
                   key={n}
@@ -89,12 +96,12 @@ export default function FeedbackPage() {
                   onMouseEnter={() => setHover(n)}
                   onMouseLeave={() => setHover(0)}
                   onClick={() => setRating(n)}
-                  className="text-4xl transition-transform hover:scale-110"
+                  className="text-4xl transition-all hover:scale-115"
                   aria-label={`${n} star${n > 1 ? "s" : ""}`}
                 >
                   <FaStar
                     className={
-                      n <= (hover || rating) ? "text-primary-orange" : "text-gray-300"
+                      n <= (hover || rating) ? "text-accent-light drop-shadow-[0_0_12px_rgba(201,168,124,0.5)]" : "text-foreground/15"
                     }
                   />
                 </button>
@@ -102,40 +109,68 @@ export default function FeedbackPage() {
             </div>
           </div>
 
-          <Input
-            label="Name (optional)"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Input
-            label="Phone (optional)"
-            name="phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <Textarea
-            label="Comments (optional)"
-            name="comment"
-            rows={4}
-            placeholder="Tell us about your ride…"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
+          <Field label="Name (optional)">
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="input-modern"
+            />
+          </Field>
+          <Field label="Phone (optional)">
+            <input
+              type="tel"
+              name="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="input-modern"
+            />
+          </Field>
+          <Field label="Comment (optional)">
+            <textarea
+              name="comment"
+              rows={4}
+              placeholder="Tell us about your ride..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="input-modern"
+            />
+          </Field>
 
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+            <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
               {error}
             </p>
           )}
 
-          <Button type="submit" fullWidth size="lg" disabled={busy}>
-            {busy ? <Spinner size="sm" className="mr-2" /> : null}
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full btn-gold py-4 rounded-full font-bold text-base inline-flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            {busy && <Spinner size="sm" className="mr-2" />}
             Submit feedback
-          </Button>
+          </button>
         </form>
       </div>
     </section>
+  );
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-semibold tracking-[0.25em] uppercase text-muted mb-2">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }

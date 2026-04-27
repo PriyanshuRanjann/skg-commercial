@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 
 const inputBase =
-  "w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange disabled:bg-gray-100 disabled:cursor-not-allowed";
+  "w-full border border-[var(--hairline-strong)] rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-accent disabled:bg-[var(--bg-elevated)] disabled:cursor-not-allowed";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -16,7 +16,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-semibold text-gray-700">
+        <label htmlFor={inputId} className="block text-sm font-semibold text-foreground/85">
           {label}
         </label>
       )}
@@ -26,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         className={`${inputBase} ${error ? "border-red-500" : ""} ${className}`}
         {...rest}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
     </div>
   );
 });
@@ -45,7 +45,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={selectId} className="block text-sm font-semibold text-gray-700">
+        <label htmlFor={selectId} className="block text-sm font-semibold text-foreground/85">
           {label}
         </label>
       )}
@@ -57,7 +57,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
       >
         {children}
       </select>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
     </div>
   );
 });
@@ -75,7 +75,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={textareaId} className="block text-sm font-semibold text-gray-700">
+        <label htmlFor={textareaId} className="block text-sm font-semibold text-foreground/85">
           {label}
         </label>
       )}
@@ -85,7 +85,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         className={`${inputBase} ${error ? "border-red-500" : ""} ${className}`}
         {...rest}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
     </div>
   );
 });

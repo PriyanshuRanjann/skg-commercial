@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FaWhatsapp, FaArrowRight } from "react-icons/fa";
 import { SERVICE_LOCATIONS, buildWhatsAppLink } from "@/lib/config";
 
 export default function BookRidePage() {
@@ -12,7 +13,7 @@ export default function BookRidePage() {
     drop: "",
     date: "",
     time: "",
-    vehicleType: "",
+    vehicleType: "Ertiga (6+1)",
     instructions: "",
   });
 
@@ -40,170 +41,156 @@ Instructions: ${formData.instructions}`;
   };
 
   return (
-    <section className="py-16 bg-light-gray min-h-screen">
-      <div className="max-w-3xl mx-auto px-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary-blue mb-2">
-          Book Your Ride
-        </h1>
-        <p className="text-gray-600 mb-8">
-          Fill in the details to book your cab.
-        </p>
+    <section className="py-24 md:py-32 min-h-screen">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12">
+          <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold tracking-[0.3em] uppercase">
+            Reserve your ride
+          </span>
+          <h1 className="mt-5 heading-display text-4xl md:text-6xl text-foreground">
+            Book your <span className="gold-text">ride</span>.
+          </h1>
+          <p className="mt-3 text-muted">
+            Fill in the details — we&apos;ll WhatsApp you to confirm.
+          </p>
+        </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-lg p-8 space-y-6"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Name
-              </label>
+        <form onSubmit={handleSubmit} className="card-luxe p-6 md:p-10 space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Field label="Name">
               <input
                 type="text"
                 name="name"
-                placeholder="Name"
+                placeholder="Your name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+                className="input-modern"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Phone
-              </label>
+            </Field>
+            <Field label="Phone">
               <input
                 type="tel"
                 name="phone"
-                placeholder="Phone"
+                placeholder="+91 ..."
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+                className="input-modern"
               />
-            </div>
+            </Field>
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Email
-            </label>
+          <Field label="Email (optional)">
             <input
               type="email"
               name="email"
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+              className="input-modern"
             />
-          </div>
+          </Field>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Pickup Location
-              </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Field label="Pickup location">
               <select
                 name="pickup"
                 value={formData.pickup}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+                className="input-modern"
               >
-                <option value="">Pickup Location</option>
+                <option value="">Select pickup</option>
                 {SERVICE_LOCATIONS.map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
+                  <option key={loc} value={loc}>{loc}</option>
                 ))}
               </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Drop Location
-              </label>
-              <select
+            </Field>
+            <Field label="Drop location">
+              <input
+                type="text"
                 name="drop"
+                placeholder="Pune area or outstation city"
                 value={formData.drop}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
-              >
-                <option value="">Drop Location</option>
-                {SERVICE_LOCATIONS.map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-              </select>
-            </div>
+                className="input-modern"
+              />
+            </Field>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Date
-              </label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <Field label="Date">
               <input
                 type="date"
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+                className="input-modern"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Time
-              </label>
+            </Field>
+            <Field label="Time">
               <input
                 type="time"
                 name="time"
                 value={formData.time}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+                className="input-modern"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Vehicle
-              </label>
+            </Field>
+            <Field label="Vehicle">
               <select
                 name="vehicleType"
                 value={formData.vehicleType}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+                className="input-modern"
               >
-                <option value="">Select Vehicle</option>
-                <option value="Ertiga">Ertiga (6+1)</option>
+                <option value="Ertiga (6+1)">Ertiga (6+1)</option>
               </select>
-            </div>
+            </Field>
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Special Instructions
-            </label>
+          <Field label="Special instructions (optional)">
             <textarea
               name="instructions"
-              placeholder="Special instructions"
+              placeholder="Anything we should know? Pickup landmark, luggage, child seat..."
               value={formData.instructions}
               onChange={handleChange}
               rows={3}
-              className="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-orange"
+              className="input-modern"
             />
-          </div>
+          </Field>
 
           <button
             type="submit"
-            className="w-full bg-primary-blue text-white py-3 rounded-md font-bold text-lg hover:bg-blue-900 transition-colors cursor-pointer"
+            className="w-full btn-gold inline-flex items-center justify-center gap-2 py-5 rounded-full font-bold text-base group"
           >
-            Submit Booking Request
+            <FaWhatsapp className="text-lg" />
+            Submit booking request
+            <FaArrowRight className="transition-transform group-hover:translate-x-1" />
           </button>
         </form>
       </div>
     </section>
+  );
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-semibold tracking-[0.25em] uppercase text-muted mb-2">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }

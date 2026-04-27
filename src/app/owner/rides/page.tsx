@@ -38,32 +38,32 @@ export default async function RidesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-primary-blue">Rides</h1>
+      <h1 className="text-2xl font-bold text-foreground">Rides</h1>
 
       {backendDown ? (
-        <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm rounded-lg px-4 py-3">
+        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm rounded-lg px-4 py-3">
           Backend not reachable.
         </div>
       ) : (
         <>
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white rounded-xl shadow-md p-5">
-              <p className="text-sm text-gray-500">Total fare (all time)</p>
-              <p className="text-2xl font-bold text-primary-blue">₹{totalFare.toFixed(0)}</p>
+            <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5">
+              <p className="text-sm text-muted">Total fare (all time)</p>
+              <p className="text-2xl font-bold text-foreground">₹{totalFare.toFixed(0)}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-md p-5">
-              <p className="text-sm text-gray-500">Your commission</p>
-              <p className="text-2xl font-bold text-primary-orange">₹{totalCommission.toFixed(0)}</p>
+            <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5">
+              <p className="text-sm text-muted">Your commission</p>
+              <p className="text-2xl font-bold text-accent">₹{totalCommission.toFixed(0)}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-md p-5">
-              <p className="text-sm text-gray-500">Driver payouts</p>
-              <p className="text-2xl font-bold text-primary-blue">₹{totalPayout.toFixed(0)}</p>
+            <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5">
+              <p className="text-sm text-muted">Driver payouts</p>
+              <p className="text-2xl font-bold text-foreground">₹{totalPayout.toFixed(0)}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md overflow-x-auto">
+          <div className="bg-[var(--bg-card)] rounded-xl shadow-md overflow-x-auto">
             <table className="w-full text-sm min-w-[640px]">
-              <thead className="bg-light-gray text-gray-600">
+              <thead className="bg-[var(--bg-elevated)] text-muted">
                 <tr>
                   <th className="text-left px-4 py-2">When</th>
                   <th className="text-left px-4 py-2">Driver</th>
@@ -75,14 +75,14 @@ export default async function RidesPage() {
               <tbody>
                 {rides.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center text-gray-500 py-6">No rides logged yet.</td>
+                    <td colSpan={5} className="text-center text-muted py-6">No rides logged yet.</td>
                   </tr>
                 ) : rides.map((r) => (
-                  <tr key={r.id} className="border-t border-gray-100">
+                  <tr key={r.id} className="border-t border-[var(--hairline)]">
                     <td className="px-4 py-2">{r.ts ? new Date(r.ts).toLocaleString() : "—"}</td>
                     <td className="px-4 py-2">{driverName.get(r.driver_id) || r.driver_id}</td>
                     <td className="px-4 py-2 text-right">₹{num(r.fare).toFixed(2)}</td>
-                    <td className="px-4 py-2 text-right text-primary-orange">₹{num(r.commission_amt).toFixed(2)}</td>
+                    <td className="px-4 py-2 text-right text-accent">₹{num(r.commission_amt).toFixed(2)}</td>
                     <td className="px-4 py-2 text-right">₹{num(r.driver_payout).toFixed(2)}</td>
                   </tr>
                 ))}

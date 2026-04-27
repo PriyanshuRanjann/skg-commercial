@@ -1,20 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { FaCar, FaFlask } from "react-icons/fa";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { FaFlask, FaArrowRight } from "react-icons/fa";
 import { Spinner } from "@/components/ui/Spinner";
-import { BRAND_NAME } from "@/lib/config";
+import { AuthShell } from "@/components/shared/AuthShell";
 
 export default function DriverLoginPage() {
+  return (
+    <AuthShell
+      eyebrow="Driver portal"
+      title={<>Welcome <span className="gold-text">back</span>.</>}
+      subtitle="Sign in to start your shift."
+      footer={
+        <>
+          New driver?{" "}
+          <Link href="/driver/signup" className="text-accent-light hover:text-accent font-semibold">
+            Apply for an account
+          </Link>
+        </>
+      }
+    >
+      <DriverLoginForm />
+    </AuthShell>
+  );
+}
+
+function DriverLoginForm() {
   const router = useRouter();
+  const params = useSearchParams();
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
+  const justSignedUp = params.get("signup") === "1";
 
   useEffect(() => {
     fetch("/api/me/mode")
@@ -35,7 +55,7 @@ export default function DriverLoginPage() {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setError(humanizeError(data.error));
+        setError(humanize(data.error));
         return;
       }
       router.replace("/driver");
@@ -48,86 +68,101 @@ export default function DriverLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-light-gray px-4">
-      <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center justify-center gap-2 mb-6 text-primary-blue font-bold text-xl">
-          <FaCar className="text-primary-orange text-2xl" />
-          <span>{BRAND_NAME}</span>
-        </Link>
-        <div className="bg-white rounded-xl shadow-lg p-8 space-y-5">
-          <div>
-            <h1 className="text-2xl font-bold text-primary-blue">Driver Login</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Sign in to start your shift.
-            </p>
-          </div>
-
-          {demoMode && (
-            <div className="bg-primary-orange/10 border border-primary-orange/30 rounded-lg px-3 py-2.5 text-xs text-primary-blue space-y-1">
-              <p className="flex items-center gap-1.5 font-bold">
-                <FaFlask className="text-primary-orange" /> Demo mode (no backend deployed)
-              </p>
-              <p>
-                Try: <code className="font-mono bg-white px-1 rounded">demo</code> /
-                <code className="font-mono bg-white px-1 rounded ml-1">demo123</code>
-              </p>
-              <button
-                type="button"
-                onClick={() => setForm({ username: "demo", password: "demo123" })}
-                className="text-primary-orange hover:underline font-semibold"
-              >
-                Fill in demo credentials
-              </button>
-            </div>
-          )}
-
-          <form onSubmit={onSubmit} className="space-y-4">
-            <Input
-              label="Username"
-              name="username"
-              autoComplete="username"
-              required
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-            />
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-            />
-            {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-                {error}
-              </p>
-            )}
-            <Button type="submit" fullWidth size="lg" disabled={busy}>
-              {busy ? <Spinner size="sm" className="mr-2" /> : null}
-              Sign in
-            </Button>
-          </form>
-
-          <p className="text-xs text-center text-gray-500">
-            Owner?{" "}
-            <Link href="/owner/login" className="text-primary-orange hover:underline">
-              Owner login
-            </Link>
-          </p>
+    <>
+      {justSignedUp && (
+        <div className="mb-5 bg-accent/10 border border-accent/30 rounded-lg px-4 py-3 text-sm text-foreground">
+          <p className="font-semibold text-accent-light">Account submitted ✓</p>
+          <p className="mt-1 text-muted">Owner approval pending. You&apos;ll be able to log in once approved.</p>
         </div>
-      </div>
-    </div>
+      )}
+
+      {demoMode && (
+        <div className="mb-5 bg-[var(--bg-card)]/5 border border-[var(--hairline-strong)] rounded-lg px-4 py-3 text-xs text-foreground/85">
+          <p className="flex items-center gap-1.5 font-semibold">
+            <FaFlask className="text-accent" /> Demo mode
+          </p>
+          <p className="mt-1 text-muted">
+            Try{" "}
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">demo</code> /{" "}
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">demo123</code>
+          </p>
+          <button
+            type="button"
+            onClick={() => setForm({ username: "demo", password: "demo123" })}
+            className="text-accent-light hover:text-accent font-semibold mt-2"
+          >
+            Fill demo credentials →
+          </button>
+        </div>
+      )}
+
+      <form onSubmit={onSubmit} className="space-y-4">
+        <Field label="Username">
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            required
+            value={form.username}
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            className="input-modern"
+          />
+        </Field>
+        <Field label="Password">
+          <input
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            required
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            className="input-modern"
+          />
+        </Field>
+
+        {error && (
+          <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={busy}
+          className="w-full btn-gold py-3.5 rounded-full font-bold inline-flex items-center justify-center gap-2 disabled:opacity-60"
+        >
+          {busy ? <Spinner size="sm" className="mr-2" /> : null}
+          Sign in
+          <FaArrowRight />
+        </button>
+      </form>
+    </>
   );
 }
 
-function humanizeError(code: unknown): string {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-semibold tracking-[0.25em] uppercase text-muted mb-2">
+        {label}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+function humanize(code: unknown): string {
   switch (code) {
     case "invalid_credentials":
       return "Wrong username or password.";
     case "driver_inactive":
-      return "Your account is inactive. Contact the owner.";
+      return "Your account is not yet approved by the owner.";
     case "invalid_input":
       return "Please check the form and try again.";
     default:

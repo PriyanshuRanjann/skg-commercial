@@ -23,14 +23,14 @@ export default async function DriversPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-primary-blue">Drivers</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-foreground">Drivers</h1>
+        <p className="text-sm text-muted">
           Create driver accounts and set per-driver commission %.
         </p>
       </div>
 
       {backendDown ? (
-        <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm rounded-lg px-4 py-3">
+        <div className="bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm rounded-lg px-4 py-3">
           Backend not reachable. Configure <code>APPS_SCRIPT_URL</code> + <code>APPS_SCRIPT_TOKEN</code> in <code>.env.local</code>.
         </div>
       ) : (

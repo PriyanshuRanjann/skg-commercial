@@ -11,7 +11,10 @@ const TOKEN = process.env.APPS_SCRIPT_TOKEN;
 
 type Action =
   | "driver.login"
+  | "driver.signup"
   | "owner.login"
+  | "owner.signup"
+  | "owner.has_any"
   | "shift.start"
   | "shift.end"
   | "shift.active"
@@ -25,7 +28,12 @@ type Action =
   | "settings.set"
   | "history.driver";
 
-const PUBLIC_ACTIONS: Action[] = ["feedback.create"];
+const PUBLIC_ACTIONS: Action[] = [
+  "feedback.create",
+  "driver.signup",
+  "owner.signup",
+  "owner.has_any",
+];
 
 type Envelope<T> = { ok: true; data: T } | { ok: false; error: string };
 

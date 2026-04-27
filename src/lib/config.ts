@@ -1,5 +1,6 @@
-export const BRAND_NAME = "MetroMile";
+export const BRAND_NAME = "Metro Miles";
 export const BRAND_TAGLINE = "Every mile, made easy";
+export const BRAND_NAME_COMPACT = "MetroMiles";
 
 export const CONTACT_PHONE_DISPLAY = "+91 98765 43210";
 export const CONTACT_PHONE_E164 = "+919876543210";

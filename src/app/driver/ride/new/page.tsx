@@ -67,7 +67,7 @@ export default function NewRidePage() {
 
   if (loading) {
     return (
-      <div className="text-gray-500 flex items-center gap-2">
+      <div className="text-muted flex items-center gap-2">
         <Spinner size="sm" /> Loading active shift…
       </div>
     );
@@ -75,8 +75,8 @@ export default function NewRidePage() {
 
   if (!shift) {
     return (
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <p className="text-gray-700">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-6">
+        <p className="text-foreground/85">
           You don&apos;t have an active shift. Start a shift before logging a ride.
         </p>
         <Button
@@ -92,13 +92,13 @@ export default function NewRidePage() {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-primary-blue">Log Ride</h1>
-        <p className="text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Log Ride</h1>
+        <p className="text-sm text-muted">
           Enter the fare collected. Commission is calculated at your rate.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4">
         <Input
           label="Fare (₹)"
           name="fare"
@@ -114,7 +114,7 @@ export default function NewRidePage() {
       </div>
 
       {success && (
-        <div className="bg-green-50 border border-green-300 text-green-800 text-sm rounded-lg px-4 py-3 space-y-1">
+        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm rounded-lg px-4 py-3 space-y-1">
           <p className="font-semibold">Ride logged.</p>
           <p>Commission: ₹{success.commission_amt.toFixed(2)}</p>
           <p>Your payout: ₹{success.driver_payout.toFixed(2)}</p>
@@ -122,7 +122,7 @@ export default function NewRidePage() {
       )}
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+        <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
           {error}
         </p>
       )}

@@ -1,9 +1,4 @@
-import {
-  FaClock,
-  FaMapMarkedAlt,
-  FaCarSide,
-  FaRupeeSign,
-} from "react-icons/fa";
+import { FaClock, FaMapMarkedAlt, FaCarSide, FaRupeeSign } from "react-icons/fa";
 
 const features = [
   {
@@ -22,7 +17,7 @@ const features = [
     icon: <FaCarSide />,
     title: "Clean, comfortable car",
     description:
-      "Maruti Suzuki Ertiga (6+1) — sanitized between rides, AC, generous luggage space for outstation runs.",
+      "Maruti Suzuki Ertiga — sanitized between rides, AC, generous luggage space for outstation runs.",
   },
   {
     icon: <FaRupeeSign />,
@@ -34,24 +29,31 @@ const features = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 md:py-24 bg-light-gray">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="max-w-2xl mx-auto text-center mb-14">
-          <span className="inline-block px-3 py-1 rounded-full bg-primary-orange/10 text-primary-orange text-xs font-bold tracking-wide uppercase">
+    <section className="relative py-24 md:py-32 bg-[var(--bg-elevated)]">
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-2xl mx-auto text-center mb-16">
+          <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold tracking-[0.3em] uppercase">
             Why ride with us
           </span>
-          <h2 className="mt-4 text-3xl md:text-5xl font-black text-primary-blue tracking-tight">
-            Built for trust.
+          <h2 className="mt-5 heading-display text-4xl md:text-6xl text-foreground">
+            Built for <span className="gold-text">trust</span>.
           </h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {features.map((f) => (
-            <div key={f.title} className="card-soft p-6">
-              <div className="w-11 h-11 rounded-xl bg-primary-blue text-primary-orange-light text-xl flex items-center justify-center mb-4">
+          {features.map((f, i) => (
+            <div
+              key={f.title}
+              className="card-luxe p-7 group reveal in"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/20 to-accent-deep/10 border border-accent/20 text-accent-light text-xl flex items-center justify-center mb-5 group-hover:border-accent/50 transition-colors">
                 {f.icon}
               </div>
-              <h3 className="text-base font-bold text-primary-blue mb-2">
+              <h3 className="text-base font-semibold text-foreground mb-2 tracking-wide">
                 {f.title}
               </h3>
               <p className="text-muted text-sm leading-relaxed">{f.description}</p>

@@ -12,49 +12,58 @@ export default function QrPage() {
     : "/feedback";
 
   return (
-    <section className="py-12 md:py-20 bg-light-gray min-h-screen print:bg-white print:py-0">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="flex items-center justify-between mb-6 print:hidden">
+    <section className="py-20 md:py-28 min-h-screen print:py-0 print:bg-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between mb-8 print:hidden">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-primary-blue hover:text-primary-orange"
+            className="inline-flex items-center gap-2 text-sm text-foreground/70 hover:text-accent-light"
           >
             <FaArrowLeft /> Back to site
           </Link>
           <PrintButton />
         </div>
 
-        <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 print:shadow-none print:rounded-none print:p-12">
+        <div className="card-luxe p-10 md:p-16 print:bg-white print:border-2 print:border-black print:p-12 print:rounded-none">
           <div className="text-center max-w-lg mx-auto">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary-orange">
+            <Image
+              src="/images/brand/logo.png"
+              alt={BRAND_NAME}
+              width={80}
+              height={80}
+              className="mx-auto rounded-xl print:hidden"
+            />
+            <p className="mt-6 text-[10px] font-semibold tracking-[0.3em] uppercase text-accent print:text-black">
               Enjoyed your ride?
             </p>
-            <h1 className="mt-3 text-3xl md:text-5xl font-black text-primary-blue tracking-tight">
-              Scan & rate us
+            <h1 className="mt-3 heading-display text-3xl md:text-5xl text-foreground print:text-black">
+              Scan &amp; rate <span className="gold-text print:!text-black print:!bg-none">us</span>
             </h1>
-            <p className="mt-3 text-muted">
+            <p className="mt-3 text-muted print:text-black">
               30-second feedback. Helps us serve you better next time.
             </p>
 
-            <div className="mt-8 inline-flex p-6 bg-light-gray rounded-3xl print:bg-white print:border print:border-gray-200">
+            <div className="mt-10 inline-flex p-6 bg-white rounded-3xl border border-[var(--hairline-strong)] print:border-2 print:border-black">
               <Image
                 src="/qr-feedback.png"
                 alt="Scan to leave feedback"
                 width={320}
                 height={320}
-                className="rounded-2xl"
+                className="rounded-2xl print:rounded-none"
                 priority
               />
             </div>
 
-            <p className="mt-6 text-sm text-muted break-all">
+            <p className="mt-6 text-xs text-muted break-all print:text-black">
               Or visit:{" "}
-              <span className="font-mono text-primary-blue">{target}</span>
+              <span className="font-mono text-foreground print:text-black">{target}</span>
             </p>
 
-            <div className="mt-10 pt-6 border-t border-[var(--hairline)]">
-              <p className="text-2xl font-black text-primary-blue">{BRAND_NAME}</p>
-              <p className="text-sm text-primary-orange font-semibold mt-1">
+            <div className="mt-10 pt-6 border-t border-[var(--hairline)] print:border-black">
+              <p className="text-xl font-light tracking-[0.3em] uppercase text-foreground print:text-black">
+                {BRAND_NAME}
+              </p>
+              <p className="text-xs text-accent tracking-[0.25em] uppercase mt-2 print:text-black">
                 {BRAND_TAGLINE}
               </p>
             </div>
@@ -62,8 +71,8 @@ export default function QrPage() {
         </div>
 
         <p className="text-xs text-center text-muted mt-6 print:hidden">
-          Tip: print on A5 or larger. Mount on the back of the front passenger seat
-          where it&apos;s easily scannable.
+          Tip: print on A5 or larger. Mount on the back of the front passenger
+          seat where it&apos;s easily scannable.
         </p>
       </div>
     </section>

@@ -154,6 +154,39 @@ export async function mockCall(
       return { username: o.username };
     }
 
+    case "owner.has_any":
+      return { exists: s.owners.length > 0 };
+
+    case "owner.signup": {
+      if (s.owners.length > 0) throw new Error("owner_exists");
+      const username = String(payload.username || "").trim();
+      const password = String(payload.password || "");
+      if (!username || !password) throw new Error("missing_fields");
+      s.owners.push({ username, password });
+      return { username };
+    }
+
+    case "driver.signup": {
+      const username = String(payload.username || "").trim();
+      const password = String(payload.password || "");
+      const name = String(payload.name || "").trim();
+      const phone = String(payload.phone || "").trim();
+      if (!username || !password || !name) throw new Error("missing_fields");
+      if (s.drivers.some((x) => x.username === username)) throw new Error("username_taken");
+      const newDriver: Driver = {
+        id: newId("drv"),
+        name,
+        phone,
+        username,
+        password,
+        commission_pct: Number(s.settings.default_commission_pct) || 20,
+        active: false,
+        created_at: nowIso(),
+      };
+      s.drivers.push(newDriver);
+      return { id: newDriver.id, name: newDriver.name, pending: true };
+    }
+
     case "shift.start": {
       const id = newId("shf");
       s.shifts.push({

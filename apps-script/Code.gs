@@ -26,7 +26,12 @@ const SHEETS = {
   SETTINGS: { name: "Settings", headers: ["key","value"] },
 };
 
-const PUBLIC_ACTIONS = new Set(["feedback.create"]);
+const PUBLIC_ACTIONS = new Set([
+  "feedback.create",
+  "driver.signup",
+  "owner.signup",
+  "owner.has_any",
+]);
 
 // ---------- Entry points ----------
 function doPost(e) {
@@ -72,7 +77,10 @@ function jsonResponse(obj /*, status */) {
 // ---------- Handlers ----------
 const HANDLERS = {
   "driver.login":     handleDriverLogin,
+  "driver.signup":    handleDriverSignup,
   "owner.login":      handleOwnerLogin,
+  "owner.signup":     handleOwnerSignup,
+  "owner.has_any":    handleOwnerHasAny,
   "shift.start":      handleShiftStart,
   "shift.end":        handleShiftEnd,
   "shift.active":     handleShiftActive,
@@ -110,6 +118,42 @@ function handleOwnerLogin(body) {
   if (!owner) throw new Error("invalid_credentials");
   if (!verifyPassword(password, owner.password)) throw new Error("invalid_credentials");
   return { username: owner.username };
+}
+
+function handleDriverSignup(body) {
+  const { name, phone, username, password } = body;
+  const u = String(username || "").trim();
+  if (!u || !password || !name) throw new Error("missing_fields");
+  if (findRowByValue(SHEETS.DRIVERS, "username", u)) throw new Error("username_taken");
+  const settings = handleSettingsGet();
+  const defaultPct = Number(settings.default_commission_pct) || 20;
+  const id = newId("drv");
+  appendRow(SHEETS.DRIVERS, {
+    id,
+    name,
+    phone: phone || "",
+    username: u,
+    password: hashPassword(password),
+    commission_pct: defaultPct,
+    active: false,
+    created_at: nowIso(),
+  });
+  return { id, name, pending: true };
+}
+
+function handleOwnerSignup(body) {
+  const sh = getSheet(SHEETS.OWNERS);
+  if (sh.getLastRow() > 1) throw new Error("owner_exists");
+  const { username, password } = body;
+  const u = String(username || "").trim();
+  if (!u || !password) throw new Error("missing_fields");
+  appendRow(SHEETS.OWNERS, { username: u, password: hashPassword(password) });
+  return { username: u };
+}
+
+function handleOwnerHasAny() {
+  const sh = getSheet(SHEETS.OWNERS);
+  return { exists: sh.getLastRow() > 1 };
 }
 
 function handleShiftStart(body) {

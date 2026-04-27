@@ -81,7 +81,7 @@ export default function NewExpensePage() {
 
   if (loading) {
     return (
-      <div className="text-gray-500 flex items-center gap-2">
+      <div className="text-muted flex items-center gap-2">
         <Spinner size="sm" /> Loading…
       </div>
     );
@@ -90,13 +90,13 @@ export default function NewExpensePage() {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-primary-blue">Log Expense</h1>
-        <p className="text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Log Expense</h1>
+        <p className="text-sm text-muted">
           Fuel, toll, parking, maintenance — anything you spent for this shift.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4">
         <Select
           label="Category"
           name="type"
@@ -133,12 +133,12 @@ export default function NewExpensePage() {
       </div>
 
       {done && (
-        <p className="text-sm text-green-700 bg-green-50 border border-green-300 rounded-md px-3 py-2">
+        <p className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-md px-3 py-2">
           Expense logged.
         </p>
       )}
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+        <p className="text-sm text-[var(--danger)] bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
           {error}
         </p>
       )}

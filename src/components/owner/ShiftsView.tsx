@@ -46,13 +46,13 @@ export function ShiftsView({ shifts }: { shifts: Shift[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md overflow-hidden">
         <ShiftMap points={points} />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md overflow-x-auto">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md overflow-x-auto">
         <table className="w-full text-sm min-w-[800px]">
-          <thead className="bg-light-gray text-gray-600">
+          <thead className="bg-[var(--bg-elevated)] text-muted">
             <tr>
               <th className="text-left px-4 py-2">Driver</th>
               <th className="text-left px-4 py-2">Started</th>
@@ -67,10 +67,10 @@ export function ShiftsView({ shifts }: { shifts: Shift[] }) {
           <tbody>
             {shifts.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center text-gray-500 py-6">No shifts yet.</td>
+                <td colSpan={8} className="text-center text-muted py-6">No shifts yet.</td>
               </tr>
             ) : shifts.map((s) => (
-              <tr key={s.id} className="border-t border-gray-100">
+              <tr key={s.id} className="border-t border-[var(--hairline)]">
                 <td className="px-4 py-2">{s.driver_name}</td>
                 <td className="px-4 py-2">{s.start_ts ? new Date(s.start_ts).toLocaleString() : "—"}</td>
                 <td className="px-4 py-2">{s.end_ts ? new Date(s.end_ts).toLocaleString() : "—"}</td>
@@ -79,14 +79,14 @@ export function ShiftsView({ shifts }: { shifts: Shift[] }) {
                 <td className="px-4 py-2 text-right font-semibold">{s.total_km || "—"}</td>
                 <td className="px-4 py-2">
                   {s.start_photo1_url && (
-                    <a href={s.start_photo1_url} target="_blank" className="text-primary-orange underline mr-2">P1</a>
+                    <a href={s.start_photo1_url} target="_blank" className="text-accent underline mr-2">P1</a>
                   )}
                   {s.start_photo2_url && (
-                    <a href={s.start_photo2_url} target="_blank" className="text-primary-orange underline">P2</a>
+                    <a href={s.start_photo2_url} target="_blank" className="text-accent underline">P2</a>
                   )}
                 </td>
                 <td className="px-4 py-2">
-                  <span className={s.status === "active" ? "text-primary-orange font-semibold" : "text-gray-500"}>
+                  <span className={s.status === "active" ? "text-accent font-semibold" : "text-muted"}>
                     {s.status}
                   </span>
                 </td>

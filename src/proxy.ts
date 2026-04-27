@@ -15,9 +15,12 @@ const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || "");
 export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  const isLoginPage =
-    path === "/driver/login" || path === "/owner/login";
-  if (isLoginPage) return NextResponse.next();
+  const isPublicAuthPage =
+    path === "/driver/login" ||
+    path === "/owner/login" ||
+    path === "/driver/signup" ||
+    path === "/owner/signup";
+  if (isPublicAuthPage) return NextResponse.next();
 
   const wantsRole: "driver" | "owner" = path.startsWith("/owner") ? "owner" : "driver";
   const loginUrl = new URL(`/${wantsRole}/login`, req.url);
