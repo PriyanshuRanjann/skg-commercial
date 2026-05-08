@@ -11,7 +11,7 @@ export default function MarketingLayout({
       <main className="flex-1">{children}</main>
       <Footer />
       <Script
-        src="https://always-on-backend-dev.altrrtech.com/widget.js"
+        src="https://always-on-dev.altrrtech.com/widget.js"
         strategy="afterInteractive"
         data-org-id="bd8c2fca-65fe-4f40-80d8-89ddcc6b4514"
         data-api-url="https://always-on-backend-dev.altrrtech.com"
