@@ -1,6 +1,7 @@
 import Script from "next/script";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { WidgetTheme } from "@/components/marketing/WidgetTheme";
 
 export default function MarketingLayout({
   children,
@@ -15,7 +16,9 @@ export default function MarketingLayout({
         strategy="afterInteractive"
         data-org-id="bd8c2fca-65fe-4f40-80d8-89ddcc6b4514"
         data-api-url="https://always-on-backend-dev.altrrtech.com"
+        data-color="#c9a87c"
       />
+      <WidgetTheme />
     </div>
   );
 }
