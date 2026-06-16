@@ -537,14 +537,35 @@ function stripPassword(row) {
  */
 function setupSeed() {
   const OWNER_USERNAME = "owner";
-  const OWNER_PASSWORD = "change-me-now";
+  const OWNER_PASSWORD = "Metro@Admin25";
+
+  const DRIVER_USERNAME = "driver1";
+  const DRIVER_PASSWORD = "Metro@Driver25";
+  const DRIVER_NAME    = "Driver One";
+  const DRIVER_PHONE   = "+91 99000 11111";
+
   ensureSheets();
+
   if (!findRowByValue(SHEETS.OWNERS, "username", OWNER_USERNAME)) {
     appendRow(SHEETS.OWNERS, {
       username: OWNER_USERNAME,
       password: hashPassword(OWNER_PASSWORD),
     });
   }
+
+  if (!findRowByValue(SHEETS.DRIVERS, "username", DRIVER_USERNAME)) {
+    appendRow(SHEETS.DRIVERS, {
+      id: newId("drv"),
+      name: DRIVER_NAME,
+      phone: DRIVER_PHONE,
+      username: DRIVER_USERNAME,
+      password: hashPassword(DRIVER_PASSWORD),
+      commission_pct: 20,
+      active: true,
+      created_at: nowIso(),
+    });
+  }
+
   // Default settings
   if (!findRowByValue(SHEETS.SETTINGS, "key", "default_commission_pct")) {
     appendRow(SHEETS.SETTINGS, { key: "default_commission_pct", value: "20" });

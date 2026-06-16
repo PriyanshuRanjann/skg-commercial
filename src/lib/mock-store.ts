@@ -99,17 +99,17 @@ function getStore(): Store {
     globalThis.__metromileMock = {
       drivers: [
         {
-          id: "drv_demo",
-          name: "Demo Driver",
-          phone: "+91 98765 43210",
-          username: "demo",
-          password: "demo123",
+          id: "drv_001",
+          name: "Driver One",
+          phone: "+91 99000 11111",
+          username: "driver1",
+          password: "Metro@Driver25",
           commission_pct: 20,
           active: true,
           created_at: nowIso(),
         },
       ],
-      owners: [{ username: "owner", password: "owner123" }],
+      owners: [{ username: "owner", password: "Metro@Admin25" }],
       shifts: [],
       rides: [],
       expenses: [],

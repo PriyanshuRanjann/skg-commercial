@@ -75,17 +75,32 @@ JWT sessions via `jose`, stored in an httpOnly cookie called `mm_session` (12-ho
 
 When adding a new endpoint, follow this same shape and add a schema to `validation.ts` rather than ad-hoc parsing.
 
+### Third-party chat widget
+
+The marketing layout (`src/app/(marketing)/layout.tsx`) injects an AlwaysOn chat widget via `<Script>`. `WidgetTheme` (`src/components/marketing/WidgetTheme.tsx`) patches the widget's Shadow DOM at runtime using `MutationObserver` — it injects brand CSS overrides, swaps the default chat icon for a car glyph, and adds a phone popover button.
+
+**Important:** The phone number in `WidgetTheme.tsx` (`PHONE_DISPLAY` / `PHONE_TEL`) is the AI-agent call line, hardcoded separately from `config.ts`. If the number changes, update both files.
+
+### Driver activation flow
+
+New driver signups (`driver.signup`) create the driver with `active: false`. The driver **cannot log in** until an owner activates them via DriversManager (`driver.upsert` with `active: true`). The login endpoint throws `driver_inactive` (→ 401) for inactive accounts.
+
 ### Components
 
 Grouped by audience under `src/components/`:
 
-- `marketing/` — Hero, BookingForm, WhyChooseUs, ServiceAreas, Testimonials.
+- `marketing/` — Hero, BookingForm, WhyChooseUs, ServiceAreas, Testimonials, WidgetTheme.
 - `driver/` — LogoutButton, PhotoCapture (camera capture for shift start).
-- `owner/` — DriversManager, ShiftsView, ShiftMap (Leaflet — must be `"use client"` and dynamic-imported because Leaflet touches `window`).
+- `owner/` — DriversManager, ShiftsView, ShiftMap (Leaflet — must be `"use client"` and dynamic-imported because Leaflet touches `window`), OwnerLogoutButton.
 - `shared/` — Navbar, Footer, AuthShell.
 - `ui/` — Button, Card, Input, Spinner (the design-system primitives; prefer these over raw `<button>`/`<input>`).
 
 Path alias `@/*` → `./src/*`. Icons come from `react-icons/fa`.
+
+### Utility lib modules
+
+- `src/lib/geo.ts` — GPS helpers (`getCurrentLocation`, `formatLatLng`) **and** `fileToBase64` (strips the data-URL prefix for sending camera/file photos as base64 to the backend). Used by shift-start and expense forms.
+- `src/app/api/me/mode/route.ts` — `GET /api/me/mode` returns `{ demo: boolean }`. `demo: true` when running in mock mode (no `APPS_SCRIPT_URL`). Client components can use this to show a demo banner.
 
 ### Brand and config constants
 
