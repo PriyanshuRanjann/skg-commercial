@@ -68,11 +68,11 @@ function OwnerLoginForm() {
           <p className="mt-1 text-muted">
             Try{" "}
             <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">owner</code> /{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">owner123</code>
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">Metro@Admin25</code>
           </p>
           <button
             type="button"
-            onClick={() => setForm({ username: "owner", password: "owner123" })}
+            onClick={() => setForm({ username: "owner", password: "Metro@Admin25" })}
             className="text-accent-light hover:text-accent font-semibold mt-2"
           >
             Fill demo credentials →

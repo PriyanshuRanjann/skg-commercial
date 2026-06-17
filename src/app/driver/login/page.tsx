@@ -83,12 +83,12 @@ function DriverLoginForm() {
           </p>
           <p className="mt-1 text-muted">
             Try{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">demo</code> /{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">demo123</code>
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">driver1</code> /{" "}
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">Metro@Driver25</code>
           </p>
           <button
             type="button"
-            onClick={() => setForm({ username: "demo", password: "demo123" })}
+            onClick={() => setForm({ username: "driver1", password: "Metro@Driver25" })}
             className="text-accent-light hover:text-accent font-semibold mt-2"
           >
             Fill demo credentials →
