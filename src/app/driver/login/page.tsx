@@ -152,6 +152,8 @@ function humanize(code: unknown): string {
   switch (code) {
     case "invalid_credentials":
       return "Wrong email or password.";
+    case "driver_inactive":
+      return "Account not yet activated. Contact the owner.";
     case "invalid_input":
       return "Please check the form and try again.";
     default:
