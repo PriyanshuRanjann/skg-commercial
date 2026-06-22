@@ -49,7 +49,7 @@ When adding a new page, put it in the section whose shell you want. Don't try to
 
 All persistent data flows through `src/lib/sheets.ts::callSheets(action, payload)`. This is a **server-only** module — never import it from a client component (it carries `APPS_SCRIPT_TOKEN`).
 
-- If `APPS_SCRIPT_URL` is unset, `callSheets` automatically delegates to `src/lib/mock-store.ts`, an in-memory store seeded with a demo driver (`demo` / `demo123`) and a demo owner (`owner` / `owner123`). This means **local dev needs no real backend** — the app is fully functional out of the box. Mock data resets on dev-server restart.
+- If `APPS_SCRIPT_URL` is unset, `callSheets` automatically delegates to `src/lib/mock-store.ts`, an in-memory store seeded with a demo driver (`driver1` / `Metro@Driver25`) and a demo owner (`owner` / `Metro@Admin25`). This means **local dev needs no real backend** — the app is fully functional out of the box. Mock data resets on dev-server restart.
 - If `APPS_SCRIPT_URL` is set, requests POST to the Apps Script Web App with `apiToken` for non-public actions. The action surface is fixed (`driver.login`, `shift.start`, `ride.create`, `owner.list`, etc.) — see the `Action` union in `sheets.ts` and the matching dispatch in `apps-script/Code.gs`.
 - The Apps Script returns `{ ok, data | error }` envelopes (it can't set HTTP status codes). `callSheets` translates `unauthorized`/`invalid_credentials` errors into 401 via `SheetsError`.
 
@@ -84,6 +84,10 @@ The marketing layout (`src/app/(marketing)/layout.tsx`) injects an AlwaysOn chat
 ### Driver activation flow
 
 New driver signups (`driver.signup`) create the driver with `active: false`. The driver **cannot log in** until an owner activates them via DriversManager (`driver.upsert` with `active: true`). The login endpoint throws `driver_inactive` (→ 401) for inactive accounts.
+
+### Owner signup is one-time only
+
+`owner.signup` throws `owner_exists` if any owner already exists in the store. The `/owner/signup` page is only for the initial setup. Check `/api/auth/owner/exists` (`owner.has_any` action) to know whether to show the signup link.
 
 ### Components
 

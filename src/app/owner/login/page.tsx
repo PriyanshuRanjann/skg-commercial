@@ -22,7 +22,7 @@ export default function OwnerLoginPage() {
 
 function OwnerLoginForm() {
   const router = useRouter();
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
@@ -42,7 +42,7 @@ function OwnerLoginForm() {
       const res = await fetch("/api/auth/owner/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ email: form.email, password: form.password }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -67,12 +67,12 @@ function OwnerLoginForm() {
           </p>
           <p className="mt-1 text-muted">
             Try{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">owner</code> /{" "}
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">owner@demo.com</code> /{" "}
             <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">Metro@Admin25</code>
           </p>
           <button
             type="button"
-            onClick={() => setForm({ username: "owner", password: "Metro@Admin25" })}
+            onClick={() => setForm({ email: "owner@demo.com", password: "Metro@Admin25" })}
             className="text-accent-light hover:text-accent font-semibold mt-2"
           >
             Fill demo credentials →
@@ -81,14 +81,14 @@ function OwnerLoginForm() {
       )}
 
       <form onSubmit={onSubmit} className="space-y-4">
-        <Field label="Username">
+        <Field label="Email">
           <input
-            type="text"
-            name="username"
-            autoComplete="username"
+            type="email"
+            name="email"
+            autoComplete="email"
             required
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="input-modern"
           />
         </Field>

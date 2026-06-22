@@ -109,74 +109,15 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
     }
   };
 
-  const onApprove = async (d: Driver) => {
-    setBusy(true);
-    try {
-      await fetch("/api/drivers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: d.id,
-          name: d.name,
-          phone: d.phone,
-          username: d.username,
-          commission_pct: Number(d.commission_pct) || 20,
-          active: true,
-        }),
-      });
-      const list = await fetch("/api/drivers").then((r) => r.json());
-      if (list.ok) setDrivers(list.drivers);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const pending = drivers.filter((d) => String(d.active).toLowerCase() === "false");
-
   return (
     <div className="space-y-6">
-      {pending.length > 0 && (
-        <div className="card-luxe p-5 border-accent/30 bg-accent/[0.04]">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-bold text-accent tracking-[0.15em] uppercase">
-              {pending.length} pending {pending.length === 1 ? "application" : "applications"}
-            </h2>
-          </div>
-          <p className="text-xs text-muted mb-4">
-            New drivers signed up via /driver/signup. Approve them to enable login.
-          </p>
-          <ul className="space-y-2">
-            {pending.map((d) => (
-              <li
-                key={d.id}
-                className="flex items-center justify-between bg-[var(--bg-elevated)] rounded-lg px-4 py-3"
-              >
-                <div>
-                  <p className="font-semibold text-foreground">{d.name}</p>
-                  <p className="text-xs text-muted">
-                    {d.phone || "—"} · @{d.username}
-                  </p>
-                </div>
-                <button
-                  onClick={() => onApprove(d)}
-                  disabled={busy}
-                  className="btn-gold px-4 py-2 rounded-full text-xs font-bold disabled:opacity-60"
-                >
-                  Approve
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
     <div className="grid lg:grid-cols-[1fr_360px] gap-6">
       <div className="bg-[var(--bg-card)] rounded-xl shadow-md overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-[var(--bg-elevated)] text-muted">
             <tr>
               <th className="text-left px-4 py-2">Name</th>
-              <th className="text-left px-4 py-2">Username</th>
+              <th className="text-left px-4 py-2">Email</th>
               <th className="text-right px-4 py-2">Commission %</th>
               <th className="text-left px-4 py-2">Status</th>
               <th className="px-4 py-2"></th>
@@ -212,15 +153,6 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
                   )}
                 </td>
                 <td className="px-4 py-2 text-right space-x-2">
-                  {String(d.active).toLowerCase() === "false" && (
-                    <button
-                      onClick={() => onApprove(d)}
-                      disabled={busy}
-                      className="text-sm text-accent-light hover:text-accent font-semibold disabled:opacity-60"
-                    >
-                      Approve
-                    </button>
-                  )}
                   <button
                     onClick={() => onSelect(d)}
                     className="text-sm text-accent hover:underline"
@@ -262,8 +194,9 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
         <Input
-          label="Username"
+          label="Email"
           name="username"
+          type="email"
           required
           value={form.username}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -322,7 +255,8 @@ export function DriversManager({ initial }: { initial: Driver[] }) {
 function humanize(err: unknown): string {
   switch (err) {
     case "username_taken":
-      return "Username already taken.";
+    case "email_taken":
+      return "That email is already in use.";
     case "password_required":
       return "A password is required for new drivers.";
     case "invalid_input":

@@ -5,9 +5,7 @@ import { loginSchema } from "@/lib/validation";
 
 type DriverLoginResult = {
   id: string;
-  name: string;
-  username: string;
-  phone: string;
+  email: string;
   commission_pct: number;
 };
 
@@ -25,12 +23,14 @@ export async function POST(req: Request) {
   }
 
   try {
-    const driver = await callSheets<DriverLoginResult>("driver.login", parsed.data);
+    const driver = await callSheets<DriverLoginResult>("driver.login", {
+      username: parsed.data.email,
+      password: parsed.data.password,
+    });
     await setSessionCookie({
       sub: driver.id,
       role: "driver",
-      name: driver.name,
-      username: driver.username,
+      email: parsed.data.email,
     });
     return NextResponse.json({ ok: true, driver });
   } catch (e) {

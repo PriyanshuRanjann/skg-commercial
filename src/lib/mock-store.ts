@@ -100,16 +100,16 @@ function getStore(): Store {
       drivers: [
         {
           id: "drv_001",
-          name: "Driver One",
-          phone: "+91 99000 11111",
-          username: "driver1",
+          name: "",
+          phone: "",
+          username: "driver@demo.com",
           password: "Metro@Driver25",
           commission_pct: 20,
           active: true,
           created_at: nowIso(),
         },
       ],
-      owners: [{ username: "owner", password: "Metro@Admin25" }],
+      owners: [{ username: "owner@demo.com", password: "Metro@Admin25" }],
       shifts: [],
       rides: [],
       expenses: [],
@@ -132,26 +132,22 @@ export async function mockCall(
 
   switch (action) {
     case "driver.login": {
-      const d = s.drivers.find(
-        (x) => x.username === String(payload.username || "").trim()
-      );
+      const identifier = String(payload.email || payload.username || "").trim().toLowerCase();
+      const d = s.drivers.find((x) => x.username === identifier);
       if (!d || d.password !== payload.password) throw new Error("invalid_credentials");
       if (!d.active) throw new Error("driver_inactive");
       return {
         id: d.id,
-        name: d.name,
-        phone: d.phone,
-        username: d.username,
+        email: d.username,
         commission_pct: d.commission_pct,
       };
     }
 
     case "owner.login": {
-      const o = s.owners.find(
-        (x) => x.username === String(payload.username || "").trim()
-      );
+      const identifier = String(payload.email || payload.username || "").trim().toLowerCase();
+      const o = s.owners.find((x) => x.username === identifier);
       if (!o || o.password !== payload.password) throw new Error("invalid_credentials");
-      return { username: o.username };
+      return { email: o.username };
     }
 
     case "owner.has_any":
@@ -159,32 +155,30 @@ export async function mockCall(
 
     case "owner.signup": {
       if (s.owners.length > 0) throw new Error("owner_exists");
-      const username = String(payload.username || "").trim();
+      const email = String(payload.email || payload.username || "").trim().toLowerCase();
       const password = String(payload.password || "");
-      if (!username || !password) throw new Error("missing_fields");
-      s.owners.push({ username, password });
-      return { username };
+      if (!email || !password) throw new Error("missing_fields");
+      s.owners.push({ username: email, password });
+      return { email };
     }
 
     case "driver.signup": {
-      const username = String(payload.username || "").trim();
+      const email = String(payload.email || payload.username || "").trim().toLowerCase();
       const password = String(payload.password || "");
-      const name = String(payload.name || "").trim();
-      const phone = String(payload.phone || "").trim();
-      if (!username || !password || !name) throw new Error("missing_fields");
-      if (s.drivers.some((x) => x.username === username)) throw new Error("username_taken");
+      if (!email || !password) throw new Error("missing_fields");
+      if (s.drivers.some((x) => x.username === email)) throw new Error("email_taken");
       const newDriver: Driver = {
         id: newId("drv"),
-        name,
-        phone,
-        username,
+        name: "",
+        phone: "",
+        username: email,
         password,
         commission_pct: Number(s.settings.default_commission_pct) || 20,
-        active: false,
+        active: true,
         created_at: nowIso(),
       };
       s.drivers.push(newDriver);
-      return { id: newDriver.id, name: newDriver.name, pending: true };
+      return { id: newDriver.id };
     }
 
     case "shift.start": {

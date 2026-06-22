@@ -7,7 +7,7 @@ export type Session = {
   sub: string;
   role: Role;
   name?: string;
-  username?: string;
+  email?: string;
 };
 
 const COOKIE_NAME = "mm_session";
@@ -20,7 +20,7 @@ function getSecret(): Uint8Array {
 }
 
 export async function signSession(session: Session): Promise<string> {
-  return await new SignJWT({ role: session.role, name: session.name, username: session.username })
+  return await new SignJWT({ role: session.role, name: session.name, email: session.email })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(session.sub)
     .setIssuedAt()
@@ -36,7 +36,7 @@ export async function verifySession(token: string): Promise<Session | null> {
       sub: String(payload.sub),
       role: payload.role as Role,
       name: payload.name as string | undefined,
-      username: payload.username as string | undefined,
+      email: payload.email as string | undefined,
     };
   } catch {
     return null;

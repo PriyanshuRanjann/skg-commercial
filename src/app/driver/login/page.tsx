@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaFlask, FaArrowRight } from "react-icons/fa";
 import { Spinner } from "@/components/ui/Spinner";
@@ -17,7 +17,7 @@ export default function DriverLoginPage() {
         <>
           New driver?{" "}
           <Link href="/driver/signup" className="text-accent-light hover:text-accent font-semibold">
-            Apply for an account
+            Create an account
           </Link>
         </>
       }
@@ -29,12 +29,10 @@ export default function DriverLoginPage() {
 
 function DriverLoginForm() {
   const router = useRouter();
-  const params = useSearchParams();
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
-  const justSignedUp = params.get("signup") === "1";
 
   useEffect(() => {
     fetch("/api/me/mode")
@@ -51,7 +49,7 @@ function DriverLoginForm() {
       const res = await fetch("/api/auth/driver/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ email: form.email, password: form.password }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -69,13 +67,6 @@ function DriverLoginForm() {
 
   return (
     <>
-      {justSignedUp && (
-        <div className="mb-5 bg-accent/10 border border-accent/30 rounded-lg px-4 py-3 text-sm text-foreground">
-          <p className="font-semibold text-accent-light">Account submitted ✓</p>
-          <p className="mt-1 text-muted">Owner approval pending. You&apos;ll be able to log in once approved.</p>
-        </div>
-      )}
-
       {demoMode && (
         <div className="mb-5 bg-[var(--bg-card)]/5 border border-[var(--hairline-strong)] rounded-lg px-4 py-3 text-xs text-foreground/85">
           <p className="flex items-center gap-1.5 font-semibold">
@@ -83,12 +74,12 @@ function DriverLoginForm() {
           </p>
           <p className="mt-1 text-muted">
             Try{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">driver1</code> /{" "}
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">driver@demo.com</code> /{" "}
             <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">Metro@Driver25</code>
           </p>
           <button
             type="button"
-            onClick={() => setForm({ username: "driver1", password: "Metro@Driver25" })}
+            onClick={() => setForm({ email: "driver@demo.com", password: "Metro@Driver25" })}
             className="text-accent-light hover:text-accent font-semibold mt-2"
           >
             Fill demo credentials →
@@ -97,14 +88,14 @@ function DriverLoginForm() {
       )}
 
       <form onSubmit={onSubmit} className="space-y-4">
-        <Field label="Username">
+        <Field label="Email">
           <input
-            type="text"
-            name="username"
-            autoComplete="username"
+            type="email"
+            name="email"
+            autoComplete="email"
             required
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
             className="input-modern"
           />
         </Field>
@@ -160,9 +151,7 @@ function Field({
 function humanize(code: unknown): string {
   switch (code) {
     case "invalid_credentials":
-      return "Wrong username or password.";
-    case "driver_inactive":
-      return "Your account is not yet approved by the owner.";
+      return "Wrong email or password.";
     case "invalid_input":
       return "Please check the form and try again.";
     default:

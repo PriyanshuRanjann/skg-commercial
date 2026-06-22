@@ -3,7 +3,7 @@ import { callSheets, SheetsError } from "@/lib/sheets";
 import { setSessionCookie } from "@/lib/auth";
 import { loginSchema } from "@/lib/validation";
 
-type OwnerLoginResult = { username: string };
+type OwnerLoginResult = { email: string };
 
 export async function POST(req: Request) {
   let body;
@@ -19,11 +19,14 @@ export async function POST(req: Request) {
   }
 
   try {
-    const owner = await callSheets<OwnerLoginResult>("owner.login", parsed.data);
+    const owner = await callSheets<OwnerLoginResult>("owner.login", {
+      username: parsed.data.email,
+      password: parsed.data.password,
+    });
     await setSessionCookie({
-      sub: owner.username,
+      sub: owner.email,
       role: "owner",
-      username: owner.username,
+      email: owner.email,
     });
     return NextResponse.json({ ok: true, owner });
   } catch (e) {

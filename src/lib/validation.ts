@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  username: z.string().min(1).max(64).trim(),
+  email: z.string().email().max(254).toLowerCase().trim(),
   password: z.string().min(1).max(256),
 });
 
@@ -43,14 +43,12 @@ export const feedbackSchema = z.object({
 });
 
 export const driverSignupSchema = z.object({
-  name: z.string().min(1).max(120).trim(),
-  phone: z.string().max(40).optional().default(""),
-  username: z.string().min(3).max(64).trim(),
+  email: z.string().email().max(254).toLowerCase().trim(),
   password: z.string().min(6).max(256),
 });
 
 export const ownerSignupSchema = z.object({
-  username: z.string().min(3).max(64).trim(),
+  email: z.string().email().max(254).toLowerCase().trim(),
   password: z.string().min(8).max(256),
 });
 

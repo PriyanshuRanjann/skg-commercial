@@ -17,15 +17,14 @@ export async function POST(req: Request) {
   }
 
   try {
-    const result = await callSheets<{ username: string }>(
-      "owner.signup",
-      parsed.data
-    );
-    // Auto-login: set session cookie immediately on first-owner bootstrap
+    const result = await callSheets<{ email: string }>("owner.signup", {
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
     await setSessionCookie({
-      sub: result.username,
+      sub: result.email,
       role: "owner",
-      username: result.username,
+      email: result.email,
     });
     return NextResponse.json({ ok: true, owner: result });
   } catch (e) {

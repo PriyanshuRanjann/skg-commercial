@@ -29,7 +29,7 @@ export default function OwnerSignupPage() {
 
 function OwnerSignupForm() {
   const router = useRouter();
-  const [form, setForm] = useState({ username: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ email: "", password: "", confirm: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [closed, setClosed] = useState<boolean | null>(null);
@@ -74,7 +74,7 @@ function OwnerSignupForm() {
       const res = await fetch("/api/auth/owner/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: form.username, password: form.password }),
+        body: JSON.stringify({ email: form.email, password: form.password }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -92,15 +92,15 @@ function OwnerSignupForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <Field label="Username">
+      <Field label="Email">
         <input
-          type="text"
+          type="email"
           required
-          autoComplete="username"
-          value={form.username}
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
+          autoComplete="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
           className="input-modern"
-          placeholder="Pick something memorable"
+          placeholder="you@example.com"
         />
       </Field>
       <Field label="Password">
@@ -131,11 +131,6 @@ function OwnerSignupForm() {
         </p>
       )}
 
-      <p className="text-xs text-muted leading-relaxed">
-        Once created, this is the only owner account. Choose a strong password —
-        you can&apos;t reset it through this form.
-      </p>
-
       <button
         type="submit"
         disabled={busy}
@@ -149,13 +144,7 @@ function OwnerSignupForm() {
   );
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
       <span className="block text-[10px] font-semibold tracking-[0.25em] uppercase text-muted mb-2">
@@ -172,7 +161,7 @@ function humanize(code: unknown): string {
       return "An owner account already exists. Please log in.";
     case "missing_fields":
     case "invalid_input":
-      return "Please fill in all required fields.";
+      return "Please fill in all required fields correctly.";
     default:
       return "Could not create account. Please try again.";
   }
