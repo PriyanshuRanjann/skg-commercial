@@ -42,7 +42,7 @@ export default async function OwnerLayout({
           ))}
         </nav>
         <div className="p-6 border-t border-[var(--hairline)] text-sm">
-          <p className="text-foreground/70">{session?.username}</p>
+          <p className="text-foreground/70">{session?.email}</p>
           <OwnerLogoutButton />
         </div>
       </aside>

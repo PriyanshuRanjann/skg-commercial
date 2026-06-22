@@ -49,7 +49,7 @@ When adding a new page, put it in the section whose shell you want. Don't try to
 
 All persistent data flows through `src/lib/sheets.ts::callSheets(action, payload)`. This is a **server-only** module — never import it from a client component (it carries `APPS_SCRIPT_TOKEN`).
 
-- If `APPS_SCRIPT_URL` is unset, `callSheets` automatically delegates to `src/lib/mock-store.ts`, an in-memory store seeded with a demo driver (`driver1` / `Metro@Driver25`) and a demo owner (`owner` / `Metro@Admin25`). This means **local dev needs no real backend** — the app is fully functional out of the box. Mock data resets on dev-server restart.
+- If `APPS_SCRIPT_URL` is unset, `callSheets` automatically delegates to `src/lib/mock-store.ts`, an in-memory store seeded with a demo driver (`driver@demo.com` / `Metro@Driver25`) and a demo owner (`owner@demo.com` / `Metro@Admin25`). This means **local dev needs no real backend** — the app is fully functional out of the box. Mock data resets on dev-server restart.
 - If `APPS_SCRIPT_URL` is set, requests POST to the Apps Script Web App with `apiToken` for non-public actions. The action surface is fixed (`driver.login`, `shift.start`, `ride.create`, `owner.list`, etc.) — see the `Action` union in `sheets.ts` and the matching dispatch in `apps-script/Code.gs`.
 - The Apps Script returns `{ ok, data | error }` envelopes (it can't set HTTP status codes). `callSheets` translates `unauthorized`/`invalid_credentials` errors into 401 via `SheetsError`.
 
@@ -57,13 +57,15 @@ When adding a new backend operation: add the action to both the `Action` union h
 
 ### Auth
 
-JWT sessions via `jose`, stored in an httpOnly cookie called `mm_session` (12-hour expiry).
+JWT sessions via `jose`, stored in an httpOnly cookie called `mm_session` (12-hour expiry). The session payload carries `sub`, `role`, and `email`.
 
 - `src/lib/auth.ts` — `signSession`, `verifySession`, `getSession`, `requireRole`, `setSessionCookie`, `clearSessionCookie`. Server components and API routes use `getSession()`.
 - `src/proxy.ts` — protects `/driver/:path*` and `/owner/:path*`. Allows `/driver/login`, `/driver/signup`, `/owner/login`, `/owner/signup` through. Redirects to the appropriate login on missing/invalid token or wrong role.
 - Login/signup API routes live under `src/app/api/auth/{driver,owner}/*`.
 
 `JWT_SECRET` must be set or session signing throws. There is no fallback in dev.
+
+**Auth is email-based.** Both driver and owner portals identify users by email address. `loginSchema` in `validation.ts` uses an `email` field. The API login routes pass `username: parsed.data.email` to `callSheets` so the Apps Script backend still receives the field as `username` — only the value is an email. Driver signup (`driverSignupSchema`) collects email + password only; name and phone are added later by the owner via DriversManager.
 
 ### API routes
 
@@ -80,10 +82,6 @@ When adding a new endpoint, follow this same shape and add a schema to `validati
 The marketing layout (`src/app/(marketing)/layout.tsx`) injects an AlwaysOn chat widget via `<Script>`. `WidgetTheme` (`src/components/marketing/WidgetTheme.tsx`) patches the widget's Shadow DOM at runtime using `MutationObserver` — it injects brand CSS overrides, swaps the default chat icon for a car glyph, and adds a phone popover button.
 
 **Important:** The phone number in `WidgetTheme.tsx` (`PHONE_DISPLAY` / `PHONE_TEL`) is the AI-agent call line, hardcoded separately from `config.ts`. If the number changes, update both files.
-
-### Driver activation flow
-
-New driver signups (`driver.signup`) create the driver with `active: false`. The driver **cannot log in** until an owner activates them via DriversManager (`driver.upsert` with `active: true`). The login endpoint throws `driver_inactive` (→ 401) for inactive accounts.
 
 ### Owner signup is one-time only
 
