@@ -104,9 +104,7 @@ function handleDriverLogin(body) {
   if (!verifyPassword(password, driver.password)) throw new Error("invalid_credentials");
   return {
     id: driver.id,
-    name: driver.name,
-    phone: driver.phone,
-    username: driver.username,
+    email: driver.username,
     commission_pct: Number(driver.commission_pct) || 0,
   };
 }
@@ -117,7 +115,7 @@ function handleOwnerLogin(body) {
   const owner = findRowByValue(SHEETS.OWNERS, "username", String(username).trim());
   if (!owner) throw new Error("invalid_credentials");
   if (!verifyPassword(password, owner.password)) throw new Error("invalid_credentials");
-  return { username: owner.username };
+  return { email: owner.username };
 }
 
 function handleDriverSignup(body) {
@@ -135,20 +133,20 @@ function handleDriverSignup(body) {
     username: u,
     password: hashPassword(password),
     commission_pct: defaultPct,
-    active: false,
+    active: true,
     created_at: nowIso(),
   });
-  return { id, name, pending: true };
+  return { id };
 }
 
 function handleOwnerSignup(body) {
   const sh = getSheet(SHEETS.OWNERS);
   if (sh.getLastRow() > 1) throw new Error("owner_exists");
-  const { username, password } = body;
-  const u = String(username || "").trim();
+  const { email, username, password } = body;
+  const u = String(email || username || "").trim();
   if (!u || !password) throw new Error("missing_fields");
   appendRow(SHEETS.OWNERS, { username: u, password: hashPassword(password) });
-  return { username: u };
+  return { email: u };
 }
 
 function handleOwnerHasAny() {
