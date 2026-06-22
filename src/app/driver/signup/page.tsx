@@ -133,6 +133,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function humanize(code: unknown): string {
   switch (code) {
     case "email_taken":
+    case "username_taken":
       return "An account with that email already exists.";
     case "missing_fields":
     case "invalid_input":
