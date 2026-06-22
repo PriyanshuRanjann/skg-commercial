@@ -18,7 +18,8 @@ export async function POST(req: Request) {
 
   try {
     const result = await callSheets<{ id: string }>("driver.signup", {
-      email: parsed.data.email,
+      username: parsed.data.email,
+      name: parsed.data.email,
       password: parsed.data.password,
     });
     await setSessionCookie({
