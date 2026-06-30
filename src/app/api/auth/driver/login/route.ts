@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { callSheets, SheetsError } from "@/lib/sheets";
 import { setSessionCookie } from "@/lib/auth";
-import { loginSchema } from "@/lib/validation";
+import { driverLoginSchema } from "@/lib/validation";
 
 type DriverLoginResult = {
   id: string;
@@ -17,20 +17,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
-  const parsed = loginSchema.safeParse(body);
+  const parsed = driverLoginSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ ok: false, error: "invalid_input" }, { status: 400 });
   }
 
   try {
     const driver = await callSheets<DriverLoginResult>("driver.login", {
-      username: parsed.data.email,
-      password: parsed.data.password,
+      username: parsed.data.username,
+      password: parsed.data.pin,
     });
     await setSessionCookie({
       sub: driver.id,
       role: "driver",
-      email: parsed.data.email,
+      email: parsed.data.username,
     });
     return NextResponse.json({ ok: true, driver });
   } catch (e) {

@@ -1,11 +1,12 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Spinner } from "@/components/ui/Spinner";
-import { getCurrentLocation } from "@/lib/geo";
+import { getCurrentLocation, formatLatLng, type Coords } from "@/lib/geo";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 function EndShiftForm() {
   const router = useRouter();
@@ -14,8 +15,37 @@ function EndShiftForm() {
   const startKm = Number(params.get("startKm") ?? "0");
 
   const [km, setKm] = useState<string>("");
+  const [coords, setCoords] = useState<Coords | null>(null);
+  const [locationState, setLocationState] = useState<"fetching" | "ok" | "fail">("fetching");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Auto-capture GPS on mount
+  useEffect(() => {
+    let cancelled = false;
+    getCurrentLocation().then((c) => {
+      if (cancelled) return;
+      if (c) {
+        setCoords(c);
+        setLocationState("ok");
+      } else {
+        setLocationState("fail");
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const retryLocation = async () => {
+    setLocationState("fetching");
+    setCoords(null);
+    const c = await getCurrentLocation();
+    if (c) {
+      setCoords(c);
+      setLocationState("ok");
+    } else {
+      setLocationState("fail");
+    }
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,14 +57,14 @@ function EndShiftForm() {
     }
     setBusy(true);
     try {
-      const c = await getCurrentLocation();
+      const finalCoords = coords ?? (await getCurrentLocation());
       const res = await fetch(`/api/shifts/${encodeURIComponent(shiftId)}/end`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           km: endKm,
-          lat: c?.lat ?? null,
-          lng: c?.lng ?? null,
+          lat: finalCoords?.lat ?? null,
+          lng: finalCoords?.lng ?? null,
         }),
       });
       const data = await res.json();
@@ -64,8 +94,41 @@ function EndShiftForm() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">End Shift</h1>
         <p className="text-sm text-muted">
-          Enter the closing odometer reading. Your location is captured automatically.
+          Enter the closing odometer reading. Location is captured automatically.
         </p>
+      </div>
+
+      {/* Auto-detected location status */}
+      <div className="flex items-center gap-2 text-sm">
+        <FaMapMarkerAlt
+          className={
+            locationState === "ok"
+              ? "text-green-400"
+              : locationState === "fail"
+              ? "text-[var(--danger)]"
+              : "text-muted"
+          }
+        />
+        {locationState === "fetching" && (
+          <span className="text-muted flex items-center gap-1.5">
+            <Spinner size="sm" /> Detecting location…
+          </span>
+        )}
+        {locationState === "ok" && coords && (
+          <span className="text-green-400 font-medium">{formatLatLng(coords)}</span>
+        )}
+        {locationState === "fail" && (
+          <span className="text-[var(--danger)]">
+            Location unavailable.{" "}
+            <button
+              type="button"
+              onClick={retryLocation}
+              className="underline font-semibold"
+            >
+              Retry
+            </button>
+          </span>
+        )}
       </div>
 
       <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4">

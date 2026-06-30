@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PhotoCapture } from "@/components/driver/PhotoCapture";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Spinner } from "@/components/ui/Spinner";
 import { fileToBase64, getCurrentLocation, formatLatLng, type Coords } from "@/lib/geo";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function ShiftStartPage() {
   const router = useRouter();
@@ -14,18 +15,34 @@ export default function ShiftStartPage() {
   const [photo2, setPhoto2] = useState<File | null>(null);
   const [km, setKm] = useState<string>("");
   const [coords, setCoords] = useState<Coords | null>(null);
-  const [coordsState, setCoordsState] = useState<"idle" | "fetching" | "ok" | "fail">("idle");
+  const [locationState, setLocationState] = useState<"fetching" | "ok" | "fail">("fetching");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const captureLocation = async () => {
-    setCoordsState("fetching");
+  // Auto-capture GPS on mount — driver doesn't need to press anything
+  useEffect(() => {
+    let cancelled = false;
+    getCurrentLocation().then((c) => {
+      if (cancelled) return;
+      if (c) {
+        setCoords(c);
+        setLocationState("ok");
+      } else {
+        setLocationState("fail");
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const retryLocation = async () => {
+    setLocationState("fetching");
+    setCoords(null);
     const c = await getCurrentLocation();
     if (c) {
       setCoords(c);
-      setCoordsState("ok");
+      setLocationState("ok");
     } else {
-      setCoordsState("fail");
+      setLocationState("fail");
     }
   };
 
@@ -43,7 +60,8 @@ export default function ShiftStartPage() {
     }
     setBusy(true);
     try {
-      const c = coords ?? (await getCurrentLocation());
+      // Attempt a fresh location on submit if we still don't have one
+      const finalCoords = coords ?? (await getCurrentLocation());
       const [photo1_b64, photo2_b64] = await Promise.all([
         fileToBase64(photo1),
         fileToBase64(photo2),
@@ -55,8 +73,8 @@ export default function ShiftStartPage() {
           photo1_b64,
           photo2_b64,
           km: kmNum,
-          lat: c?.lat ?? null,
-          lng: c?.lng ?? null,
+          lat: finalCoords?.lat ?? null,
+          lng: finalCoords?.lng ?? null,
         }),
       });
       const data = await res.json();
@@ -78,8 +96,41 @@ export default function ShiftStartPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Start Shift</h1>
         <p className="text-sm text-muted">
-          Take two photos of the car (front + side). Your location and timestamp are recorded.
+          Take two photos of the car. Timestamp and location are captured automatically.
         </p>
+      </div>
+
+      {/* Auto-detected location status */}
+      <div className="flex items-center gap-2 text-sm">
+        <FaMapMarkerAlt
+          className={
+            locationState === "ok"
+              ? "text-green-400"
+              : locationState === "fail"
+              ? "text-[var(--danger)]"
+              : "text-muted"
+          }
+        />
+        {locationState === "fetching" && (
+          <span className="text-muted flex items-center gap-1.5">
+            <Spinner size="sm" /> Detecting location…
+          </span>
+        )}
+        {locationState === "ok" && coords && (
+          <span className="text-green-400 font-medium">{formatLatLng(coords)}</span>
+        )}
+        {locationState === "fail" && (
+          <span className="text-[var(--danger)]">
+            Location unavailable.{" "}
+            <button
+              type="button"
+              onClick={retryLocation}
+              className="underline font-semibold"
+            >
+              Retry
+            </button>
+          </span>
+        )}
       </div>
 
       <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-5">
@@ -87,7 +138,7 @@ export default function ShiftStartPage() {
         <PhotoCapture label="Side photo" required onChange={setPhoto2} />
       </div>
 
-      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5 space-y-4">
+      <div className="bg-[var(--bg-card)] rounded-xl shadow-md p-5">
         <Input
           label="Start km (odometer)"
           name="km"
@@ -98,23 +149,6 @@ export default function ShiftStartPage() {
           value={km}
           onChange={(e) => setKm(e.target.value)}
         />
-
-        <div>
-          <p className="text-sm font-semibold text-foreground/85 mb-1">Location</p>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={captureLocation}
-              className="text-sm font-semibold text-accent underline"
-            >
-              {coordsState === "fetching" ? "Locating..." : "Capture GPS"}
-            </button>
-            <span className="text-sm text-muted">{formatLatLng(coords)}</span>
-          </div>
-          {coordsState === "fail" && (
-            <p className="text-xs text-[var(--danger)] mt-1">Could not get location. Submit will retry.</p>
-          )}
-        </div>
       </div>
 
       {error && (

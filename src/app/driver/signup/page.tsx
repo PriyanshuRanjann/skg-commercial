@@ -29,27 +29,38 @@ export default function DriverSignupPage() {
 
 function DriverSignupForm() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ username: "", pin: "", confirmPin: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  const onPinChange = (field: "pin" | "confirmPin") => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+    setForm((prev) => ({ ...prev, [field]: val }));
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (form.password !== form.confirm) {
-      setError("Passwords don't match.");
+
+    if (!form.username.trim()) {
+      setError("Username is required.");
       return;
     }
-    if (form.password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (!/^\d{4}$/.test(form.pin)) {
+      setError("PIN must be exactly 4 digits.");
       return;
     }
+    if (form.pin !== form.confirmPin) {
+      setError("PINs don't match.");
+      return;
+    }
+
     setBusy(true);
     try {
       const res = await fetch("/api/auth/driver/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password }),
+        body: JSON.stringify({ username: form.username.trim(), pin: form.pin }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -67,36 +78,41 @@ function DriverSignupForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <Field label="Email">
+      <Field label="Username">
         <input
-          type="email"
+          type="text"
           required
-          autoComplete="email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          autoComplete="username"
+          value={form.username}
+          onChange={(e) => setForm({ ...form, username: e.target.value })}
           className="input-modern"
-          placeholder="you@example.com"
+          placeholder="Choose a username"
         />
       </Field>
-      <Field label="Password">
+      <Field label="4-digit PIN">
         <input
           type="password"
           required
+          inputMode="numeric"
           autoComplete="new-password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="input-modern"
-          placeholder="6+ characters"
+          maxLength={4}
+          value={form.pin}
+          onChange={onPinChange("pin")}
+          className="input-modern tracking-[0.5em] text-center text-xl"
+          placeholder="••••"
         />
       </Field>
-      <Field label="Confirm password">
+      <Field label="Confirm PIN">
         <input
           type="password"
           required
+          inputMode="numeric"
           autoComplete="new-password"
-          value={form.confirm}
-          onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-          className="input-modern"
+          maxLength={4}
+          value={form.confirmPin}
+          onChange={onPinChange("confirmPin")}
+          className="input-modern tracking-[0.5em] text-center text-xl"
+          placeholder="••••"
         />
       </Field>
 
@@ -134,7 +150,7 @@ function humanize(code: unknown): string {
   switch (code) {
     case "email_taken":
     case "username_taken":
-      return "An account with that email already exists.";
+      return "That username is already taken.";
     case "missing_fields":
     case "invalid_input":
       return "Please fill in all required fields correctly.";

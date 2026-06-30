@@ -5,6 +5,16 @@ export const loginSchema = z.object({
   password: z.string().min(1).max(256),
 });
 
+export const driverLoginSchema = z.object({
+  username: z.string().min(1).max(64).trim(),
+  pin: z.string().length(4).regex(/^\d{4}$/, "PIN must be exactly 4 digits"),
+});
+
+export const driverPinSignupSchema = z.object({
+  username: z.string().min(1).max(64).trim(),
+  pin: z.string().length(4).regex(/^\d{4}$/, "PIN must be exactly 4 digits"),
+});
+
 export const shiftStartSchema = z.object({
   photo1_b64: z.string().min(1),
   photo2_b64: z.string().min(1),

@@ -55,6 +55,8 @@ All persistent data flows through `src/lib/sheets.ts::callSheets(action, payload
 
 When adding a new backend operation: add the action to both the `Action` union here AND `apps-script/Code.gs`, then re-deploy the Apps Script as a new version (per `apps-script/README.md`).
 
+**`driver.delete` is a soft delete** — it sets the driver's `active` flag to `false` rather than removing the row. The driver can no longer log in (login throws `driver_inactive`), but their shift/ride/expense history is preserved.
+
 ### Auth
 
 JWT sessions via `jose`, stored in an httpOnly cookie called `mm_session` (12-hour expiry). The session payload carries `sub`, `role`, and `email`.
@@ -66,6 +68,8 @@ JWT sessions via `jose`, stored in an httpOnly cookie called `mm_session` (12-ho
 `JWT_SECRET` must be set or session signing throws. There is no fallback in dev.
 
 **Auth is email-based.** Both driver and owner portals identify users by email address. `loginSchema` in `validation.ts` uses an `email` field. The API login routes pass `username: parsed.data.email` to `callSheets` so the Apps Script backend still receives the field as `username` — only the value is an email. Driver signup (`driverSignupSchema`) collects email + password only; name and phone are added later by the owner via DriversManager.
+
+**Owner-created driver login ID (`driverUpsertSchema.username`):** When an owner creates or edits a driver via DriversManager, the `username` field becomes the driver's login credential. It is not validated as email format (just `min(1).max(64)`), but should be set to the email the driver will enter on the login form, since the login form is typed `email`. Mismatch here will cause login failures.
 
 ### API routes
 

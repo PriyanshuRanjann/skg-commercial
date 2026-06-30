@@ -29,10 +29,11 @@ export default function DriverLoginPage() {
 
 function DriverLoginForm() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ username: "", pin: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
+  const pinRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("/api/me/mode")
@@ -44,12 +45,16 @@ function DriverLoginForm() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (form.pin.length !== 4 || !/^\d{4}$/.test(form.pin)) {
+      setError("PIN must be exactly 4 digits.");
+      return;
+    }
     setBusy(true);
     try {
       const res = await fetch("/api/auth/driver/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password }),
+        body: JSON.stringify({ username: form.username, pin: form.pin }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -74,12 +79,12 @@ function DriverLoginForm() {
           </p>
           <p className="mt-1 text-muted">
             Try{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">driver@demo.com</code> /{" "}
-            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">Metro@Driver25</code>
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">driver</code> /{" "}
+            <code className="font-mono bg-black/40 px-1.5 py-0.5 rounded">1234</code>
           </p>
           <button
             type="button"
-            onClick={() => setForm({ email: "driver@demo.com", password: "Metro@Driver25" })}
+            onClick={() => setForm({ username: "driver", pin: "1234" })}
             className="text-accent-light hover:text-accent font-semibold mt-2"
           >
             Fill demo credentials →
@@ -88,26 +93,34 @@ function DriverLoginForm() {
       )}
 
       <form onSubmit={onSubmit} className="space-y-4">
-        <Field label="Email">
+        <Field label="Username">
           <input
-            type="email"
-            name="email"
-            autoComplete="email"
+            type="text"
+            name="username"
+            autoComplete="username"
             required
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            value={form.username}
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
             className="input-modern"
+            placeholder="Your username"
           />
         </Field>
-        <Field label="Password">
+        <Field label="4-digit PIN">
           <input
+            ref={pinRef}
             type="password"
-            name="password"
+            name="pin"
+            inputMode="numeric"
             autoComplete="current-password"
             required
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="input-modern"
+            maxLength={4}
+            value={form.pin}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+              setForm({ ...form, pin: val });
+            }}
+            className="input-modern tracking-[0.5em] text-center text-xl"
+            placeholder="••••"
           />
         </Field>
 
@@ -151,7 +164,7 @@ function Field({
 function humanize(code: unknown): string {
   switch (code) {
     case "invalid_credentials":
-      return "Wrong email or password.";
+      return "Wrong username or PIN.";
     case "driver_inactive":
       return "Account not yet activated. Contact the owner.";
     case "invalid_input":
